@@ -1,0 +1,29 @@
+/* Tumbleweed rolling animation */
+.tumbleweed {
+	position: absolute;
+	bottom: 20px;
+	left: -160px; /* start off-screen to the left */
+	width: 120px;
+	z-index: 20;
+	pointer-events: none;
+	will-change: transform;
+	animation: rollAcross 6s linear infinite;
+}
+
+@keyframes rollAcross {
+	0% {
+		transform: translateX(0) rotate(0deg);
+	}
+	100% {
+		transform: translateX(130vw) rotate(1080deg);
+	}
+}
+
+/* Optional: reduce motion for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.tumbleweed {
+		animation: none;
+		left: 20px;
+	}
+}
+
