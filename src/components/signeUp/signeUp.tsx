@@ -11,12 +11,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { useNavigate } from "react-router-dom";
+
 import "./signeUP.css"
 
 function SignUp() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
+
+  const navigate = useNavigate();
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -27,6 +32,8 @@ function SignUp() {
     console.log("Username:", email);
     console.log("Password:", password);
     console.log("Confirm Password:", confirmPassword);
+
+    navigate("/signUpConfirmation")
 
   };
 
@@ -39,9 +46,6 @@ function SignUp() {
           <CardDescription className="text-base">
             Enter your email below to create your account
           </CardDescription>
-          <div className="pt-2">
-            <Button variant="link" className="p-0 h-auto">Login</Button>
-          </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
@@ -86,10 +90,15 @@ function SignUp() {
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button onClick={handleLogin} className="w-full h-12 text-base">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full h-12 text-base">
+            <div className = "login-signeUp">
+              <Button onClick={handleLogin} className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
+                create Account
+              </Button>
+              <Button type="button" onClick={() => navigate("/signIn")} className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
+                signIn
+              </Button>
+          </div>
+          <Button variant="outline" className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
             Login with Google
           </Button>
         </CardFooter>
