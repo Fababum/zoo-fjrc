@@ -63,10 +63,52 @@
   },
   "signIn": {
     "title": {
-      "de": "Danke fürs Anmelden",
+      "de": "Anmeldung zu deinem Konto",
       "en": "Login to your account",
       "it": "Accedi al tuo account",
       "fr": "Connectez-vous à votre compte"
+    },
+    "description": {
+      "de": "Geben Sie unten Ihre E-Mail-Adresse ein, um sich anzumelden",
+      "en": "Enter your email below to login",
+      "it": "Inserisci la tua email per accedere",
+      "fr": "Entrez votre e-mail ci-dessous pour vous connecter"
+    },
+    "email": {
+      "de": "E-Mail",
+      "en": "Email",
+      "it": "Email",
+      "fr": "E-mail"
+    },
+    "emailPlaceholder": {
+      "de": "m@beispiel.de",
+      "en": "m@example.com",
+      "it": "m@esempio.com",
+      "fr": "m@exemple.com"
+    },
+    "password": {
+      "de": "Passwort",
+      "en": "Password",
+      "it": "Password",
+      "fr": "Mot de passe"
+    },
+    "loginButton": {
+      "de": "Anmelden",
+      "en": "Login",
+      "it": "Accedi",
+      "fr": "Se connecter"
+    },
+    "signUpButton": {
+      "de": "Registrieren",
+      "en": "Sign Up",
+      "it": "Registrati",
+      "fr": "S'inscrire"
+    },
+    "googleLogin": {
+      "de": "Mit Google anmelden",
+      "en": "Login with Google",
+      "it": "Accedi con Google",
+      "fr": "Se connecter avec Google"
     }
   },
   "signUpConfirmation": {

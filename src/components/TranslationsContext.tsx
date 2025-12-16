@@ -5,7 +5,7 @@ export const TranslationsContext = createContext(null);
 
 export function TranslationsProvider({ children }) {
   const [translations] = useState(translationsData);
-  const [lang, setLang] = useState("de"); // 👈 GLOBAL
+  const [lang, setLang] = useState("it"); // 👈 GLOBAL
 
   return (
     <TranslationsContext.Provider
