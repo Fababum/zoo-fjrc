@@ -13,7 +13,11 @@ import { Label } from "@/components/ui/label"
 
 import { useNavigate } from "react-router-dom";
 
+import { TranslationsContext } from "../TranslationsContext";
+
 import "./signeUP.css"
+import { useContext } from "react";
+
 
 function SignUp() {
   const [email, setEmail] = React.useState("");
@@ -21,12 +25,14 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const navigate = useNavigate();
+const { translations, lang } = useContext(TranslationsContext);
+const t = translations.signUp;
 
 
   const handleLogin = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      alert(t.passwordMismatch[lang]);
       return;
     }
     console.log("Username:", email);
@@ -42,19 +48,19 @@ function SignUp() {
     <div className="background">
       <Card className="w-full max-w-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 1)'}}>
         <CardHeader>
-          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardTitle className="text-2xl">{t.title[lang]}</CardTitle>
           <CardDescription className="text-base">
-            Enter your email below to create your account
+            {t.description[lang]}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-base">Email</Label>
+              <Label htmlFor="email" className="text-base">{t.email[lang]}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder={t.emailPlaceholder[lang]}
                 required
                 className="h-11 text-base"
                 value={email}
@@ -63,7 +69,7 @@ function SignUp() {
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <Label htmlFor="password" className="text-base">Password</Label>
+                <Label htmlFor="password" className="text-base">{t.password[lang]}</Label>
               </div>
               <Input
                 id="password"
@@ -92,14 +98,14 @@ function SignUp() {
         <CardFooter className="flex-col gap-2">
             <div className = "login-signeUp">
               <Button onClick={handleLogin} className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
-                create Account
+                {t.createAccount[lang]}
               </Button>
               <Button type="button" onClick={() => navigate("/signIn")} className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
-                signIn
+                {t.signIn[lang]}
               </Button>
           </div>
           <Button variant="outline" className="w-full h-12 text-base hover:bg-gray-200 hover:text-black">
-            Login with Google
+            {t.googleLogin[lang]}
           </Button>
         </CardFooter>
       </Card>
