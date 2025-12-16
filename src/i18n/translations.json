@@ -1,0 +1,86 @@
+{
+  "signUp": {
+    "title": {
+      "de": "Konto erstellen",
+      "en": "Create your account",
+      "it": "Crea il tuo account",
+      "fr": "Créez votre compte"
+    },
+    "description": {
+      "de": "Geben Sie unten Ihre E-Mail-Adresse ein, um ein Konto zu erstellen",
+      "en": "Enter your email below to create your account",
+      "it": "Inserisci la tua email per creare un account",
+      "fr": "Entrez votre e-mail ci-dessous pour créer un compte"
+    },
+    "email": {
+      "de": "E-Mail",
+      "en": "Email",
+      "it": "Email",
+      "fr": "E-mail"
+    },
+    "password": {
+      "de": "Passwort",
+      "en": "Password",
+      "it": "Password",
+      "fr": "Mot de passe"
+    },
+    "confirmPassword": {
+      "de": "Passwort bestätigen",
+      "en": "Confirm Password",
+      "it": "Conferma password",
+      "fr": "Confirmer le mot de passe"
+    },
+    "createAccount": {
+      "de": "Konto erstellen",
+      "en": "Create Account",
+      "it": "Crea account",
+      "fr": "Créer un compte"
+    },
+    "signIn": {
+      "de": "Anmelden",
+      "en": "Sign In",
+      "it": "Accedi",
+      "fr": "Se connecter"
+    },
+    "googleLogin": {
+      "de": "Mit Google anmelden",
+      "en": "Login with Google",
+      "it": "Accedi con Google",
+      "fr": "Se connecter avec Google"
+    },
+    "passwordMismatch": {
+      "de": "Passwörter stimmen nicht überein!",
+      "en": "Passwords do not match!",
+      "it": "Le password non coincidono!",
+      "fr": "Les mots de passe ne correspondent pas !"
+    },
+    "emailPlaceholder": {
+      "de": "m@beispiel.de",
+      "en": "m@example.com",
+      "it": "m@esempio.com",
+      "fr": "m@exemple.com"
+    }
+  },
+  "signIn": {
+    "title": {
+      "de": "Danke fürs Anmelden",
+      "en": "Login to your account",
+      "it": "Accedi al tuo account",
+      "fr": "Connectez-vous à votre compte"
+    }
+  },
+  "signUpConfirmation": {
+    "title": {
+      "de": "Danke fürs Anmelden",
+      "en": "Thank you for signing up",
+      "it": "Grazie per la registrazione",
+      "fr": "Merci pour votre inscription"
+    },
+    "continue": {
+      "de": "weiter",
+      "en": "continue",
+      "it": "continua",
+      "fr": "continuer"
+    }
+  }
+}
