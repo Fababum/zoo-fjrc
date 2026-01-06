@@ -1,5 +1,6 @@
 
 import NavBar from "./components/navBar/navBar";
+import NotFound from "./components/errorpage/errorpage";
 import SignIn from "./components/signIn/signIn";
 import SignUp from "./components/signeUp/signeUp";
 import SignUpConfirmation from "./components/signUpConfirmation/signUpConfirmation";
@@ -9,9 +10,15 @@ import Articles from "./components/articles/articles";
 
 
 function App() {
+  const path = window.location.pathname;
+  // List of known app routes (add more as your app grows)
+  const knownPaths = ['/', '/homepage', '/home', '/signin', '/signUp', '/signup', '/purchaseTickets', '/articles', '/map'];
+  const isKnown = knownPaths.includes(path.toLowerCase());
+
   return (
     <>
       <NavBar />
+      {!isKnown && <NotFound />}
        <Routes>
             <Route path="/" element={<h1>Home</h1>} />
             <Route path="/map" element={<MapPage />} />
