@@ -1,8 +1,13 @@
 
 import NavBar from "./components/navBar/navBar";
 
+import SignIn from "./components/signIn/signIn";
+import SignUp from "./components/signeUp/signeUp";
+import SignUpConfirmation from "./components/signUpConfirmation/signUpConfirmation";
 import { Routes, Route } from "react-router-dom";
 import MapPage from "./components/map/map";
+import Articles from "./components/articles/articles";
+
 
 function App() {
   return (
