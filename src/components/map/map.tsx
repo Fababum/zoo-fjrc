@@ -24,8 +24,8 @@ const pageStyle: React.CSSProperties = {
 };
 
 const mapStyle: React.CSSProperties = {
-  maxWidth: "60%",
-  maxHeight: "60%",
+  maxWidth: "70%",
+  maxHeight: "70%",
   marginTop: "80px",
   borderRadius: "12px"
 };
@@ -33,13 +33,9 @@ const mapStyle: React.CSSProperties = {
 const sidebarStyle: React.CSSProperties = {
   position: "absolute",
   right: "20px",
-  top: "50%",
-  transform: "translateY(-50%)",
   width: "140px",
   maxWidth: "20%",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
   background: "white",
-  objectFit: "cover",
   marginTop: "40px"
 };
 
