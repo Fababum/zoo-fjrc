@@ -13,10 +13,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import SearchBar from "../searchBar/searchBar"
 
 function NavBar() {
   return (
-    <div className="absolute top-8 left-8">
+    <div className="absolute top-8 left-8 flex items-center gap-3">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -48,6 +49,9 @@ function NavBar() {
           <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
             <NavLink to="/map">Map</NavLink>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+            <NavLink to="/articles">Articles</NavLink>
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
@@ -69,6 +73,8 @@ function NavBar() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <SearchBar />
     </div>
   )
 }
