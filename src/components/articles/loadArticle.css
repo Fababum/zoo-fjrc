@@ -1,0 +1,60 @@
+/* Äußere Seitenbegrenzung */
+.page {
+  max-width: 900px;      /* Breite begrenzen */
+  margin: 0 auto;        /* horizontal zentrieren */
+  padding: 32px 16px;    /* Abstand zum Browserrand */
+}
+
+/* Markdown-Container hübsch machen */
+.markdown-body {
+  padding: 32px;
+  border-radius: 14px;
+
+  /* optional: Karten-Look */
+  background: var(--md-bg, #ffffff);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Dark Mode kompatibel */
+@media (prefers-color-scheme: dark) {
+  .markdown-body {
+    background: #0d1117;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin-top: 1.2em;
+}
+
+.markdown-body pre {
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.markdown-body code {
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Optional: feste Größe */
+.markdown-body img.small {
+  max-width: 300px;
+}
+
+.markdown-body img.medium {
+  max-width: 500px;
+}
+
+.markdown-body img.large {
+  max-width: 800px;
+}
