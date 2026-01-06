@@ -23,11 +23,17 @@ function SignIn() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const navigate = useNavigate();
-const { translations, lang } = useContext(TranslationsContext);
-const t = translations.signIn;
+const navigate = useNavigate();
+const context = useContext(TranslationsContext);
 
-  const handleLogin = (e) => {
+if (!context) {
+  return null;
+}
+
+const { translations, lang } = context;
+const t = translations.signIn as Record<string, any>;
+
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     console.log("Username:", email);
