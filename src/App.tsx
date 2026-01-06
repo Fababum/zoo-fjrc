@@ -1,6 +1,5 @@
 
 import NavBar from "./components/navBar/navBar";
-
 import SignIn from "./components/signIn/signIn";
 import SignUp from "./components/signeUp/signeUp";
 import SignUpConfirmation from "./components/signUpConfirmation/signUpConfirmation";
@@ -16,6 +15,11 @@ function App() {
        <Routes>
             <Route path="/" element={<h1>Home</h1>} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/signIn" element={<SignIn />} />
+            <Route path="/articles/:article" element={<Articles />} />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route path="/signUpConfirmation" element={<SignUpConfirmation />} />
+            <Route path="/articles" element={<Articles />} />
        </Routes>
     </>
   );
