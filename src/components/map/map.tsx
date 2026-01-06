@@ -26,6 +26,7 @@ const pageStyle: React.CSSProperties = {
 const mapStyle: React.CSSProperties = {
   maxWidth: "70%",
   maxHeight: "70%",
+  marginRight: "150px",
   marginTop: "80px",
   borderRadius: "12px"
 };
