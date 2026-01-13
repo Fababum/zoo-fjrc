@@ -139,18 +139,8 @@ function TicketBuyPage() {
             <h3>Login erforderlich</h3>
             <p>Bitte logge dich ein, um den Einkauf abzuschliessen.</p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
-              <button
-                style={{ ...button, backgroundColor: '#ccc', color: '#000' }}
-                onClick={() => setShowLoginNeeded(false)}
-              >
-                Abbrechen
-              </button>
-              <button
-                style={button}
-                onClick={() => navigate('/signIn', { state: { from: '/purchase-card', cart, total: cartTotal } })}
-              >
-                Zum Login
-              </button>
+              <button style={{ ...button, backgroundColor: '#ccc', color: '#000' }} onClick={() => setShowLoginNeeded(false)}>Abbrechen</button>
+              <button style={button} onClick={() => navigate('/signIn', { state: { from: '/purchase-card', cart, total: cartTotal } })}>Zum Login</button>
             </div>
           </div>
         </div>
@@ -159,7 +149,6 @@ function TicketBuyPage() {
   );
 }
 
-      
 
 const tickets = [
   {
