@@ -1,0 +1,26 @@
+.background {
+  z-index: -1;
+
+  position: relative; /* damit absolute Positionierung innerhalb dieser Box funktioniert */
+  background-image: url("Elephant.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contend {
+  display: flex;
+  flex-wrap: wrap;          /* mehrere Reihen */
+  gap: 12px;
+  align-items: stretch;     /* 🔑 gleiche Höhe pro Zeile */
+  padding: 12px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}

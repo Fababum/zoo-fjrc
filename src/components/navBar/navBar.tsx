@@ -60,9 +60,6 @@ function NavBar() {
             <NavLink to={`/${currentLang}/signUp`}>Sign Up</NavLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/qr-code`}>QR Code</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
             <NavLink to={`/${currentLang}/map`}>Map</NavLink>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
@@ -70,6 +67,9 @@ function NavBar() {
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
             <NavLink to={`/${currentLang}/chatbot`}>Chatbot</NavLink>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+            <NavLink to={`/${currentLang}/purchaseTickets`}>Purchase Tickets</NavLink>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
