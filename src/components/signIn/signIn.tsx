@@ -11,27 +11,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/components/AuthContext";
 
 
 import { TranslationsContext } from "../TranslationsContext";
 
-import "./signeIn.css"
+import "./signin.css"
 import { useContext } from "react";
 
 function SignIn() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const navigate = useNavigate();
-const { translations, lang } = useContext(TranslationsContext);
-const t = translations.signIn;
+const navigate = useNavigate();
+const context = useContext(TranslationsContext);
 
-  const handleLogin = (e) => {
+if (!context) {
+  return null;
+}
+
+const { translations, lang } = context;
+const t = translations.signIn as Record<string, any>;
+
+  const auth = useAuth();
+
+  const location = useLocation();
+
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    console.log("Username:", email);
-    console.log("Password:", password);
+    // In a real app, call the backend to authenticate and get a token.
+    // For now we simulate success and store a simple token.
+    const fakeToken = btoa(email + ":fake-token");
+    auth.login(fakeToken);
+    // If the sign-in was requested from another flow, redirect there with state (cart/total)
+    const state = (location.state || {}) as any;
+    if (state && state.from) {
+      navigate(state.from, { state: { cart: state.cart, total: state.total } });
+    } else {
+      navigate("/");
+    }
   };
 
   return (

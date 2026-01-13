@@ -1,11 +1,17 @@
 import { createContext, useState } from "react";
 import translationsData from "../i18n/translations.json";
 
-export const TranslationsContext = createContext(null);
+interface TranslationsContextType {
+  translations: typeof translationsData;
+  lang: string;
+  setLang: (lang: string) => void;
+}
 
-export function TranslationsProvider({ children }) {
+export const TranslationsContext = createContext<TranslationsContextType | null>(null);
+
+export function TranslationsProvider({ children }: { children: React.ReactNode }) {
   const [translations] = useState(translationsData);
-  const [lang, setLang] = useState("it"); // 👈 GLOBAL
+  const [lang, setLang] = useState("it");
 
   return (
     <TranslationsContext.Provider
