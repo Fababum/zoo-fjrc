@@ -124,5 +124,67 @@
       "it": "continua",
       "fr": "continuer"
     }
+  },
+  "chatbot": {
+    "title": {
+      "de": "Zoo-Chatbot",
+      "en": "Zoo Chatbot",
+      "it": "Chatbot dello Zoo",
+      "fr": "Chatbot du Zoo"
+    },
+    "subtitle": {
+      "de": "Frag mich alles über unsere Tiere!",
+      "en": "Ask me anything about our animals!",
+      "it": "Chiedimi qualsiasi cosa sui nostri animali!",
+      "fr": "Demandez-moi tout sur nos animaux !"
+    },
+    "chatAssistant": {
+      "de": "Chat-Assistent",
+      "en": "Chat Assistant",
+      "it": "Assistente Chat",
+      "fr": "Assistant de Chat"
+    },
+    "placeholder": {
+      "de": "Stelle eine Frage über Elefanten oder Füchse...",
+      "en": "Ask a question about elephants or foxes...",
+      "it": "Fai una domanda sugli elefanti o le volpi...",
+      "fr": "Posez une question sur les éléphants ou les renards..."
+    },
+    "tip": {
+      "de": "Tipp: Du kannst nach Informationen über Elefanten und Füchse fragen!",
+      "en": "Tip: You can ask for information about elephants and foxes!",
+      "it": "Suggerimento: Puoi chiedere informazioni sugli elefanti e le volpi!",
+      "fr": "Astuce : Vous pouvez demander des informations sur les éléphants et les renards !"
+    },
+    "initialMessage": {
+      "de": "Hallo! Ich bin dein Zoo-Assistent. Ich kann dir Fragen über Elefanten und Füchse beantworten. Was möchtest du wissen?",
+      "en": "Hello! I'm your zoo assistant. I can answer questions about elephants and foxes. What would you like to know?",
+      "it": "Ciao! Sono il tuo assistente dello zoo. Posso rispondere a domande su elefanti e volpi. Cosa vorresti sapere?",
+      "fr": "Bonjour ! Je suis votre assistant du zoo. Je peux répondre aux questions sur les éléphants et les renards. Que voulez-vous savoir ?"
+    },
+    "errorApiKey": {
+      "de": "Gemini API Key nicht konfiguriert. Bitte setze VITE_GEMINI_API_KEY in deiner .env Datei.",
+      "en": "Gemini API Key not configured. Please set VITE_GEMINI_API_KEY in your .env file.",
+      "it": "Chiave API Gemini non configurata. Imposta VITE_GEMINI_API_KEY nel tuo file .env.",
+      "fr": "Clé API Gemini non configurée. Veuillez définir VITE_GEMINI_API_KEY dans votre fichier .env."
+    },
+    "errorConnection": {
+      "de": "Es gab einen Fehler bei der Verbindung zum Chat-Service. Bitte versuche es später erneut.",
+      "en": "There was an error connecting to the chat service. Please try again later.",
+      "it": "Si è verificato un errore durante la connessione al servizio di chat. Riprova più tardi.",
+      "fr": "Une erreur s'est produite lors de la connexion au service de chat. Veuillez réessayer plus tard."
+    },
+    "noResponse": {
+      "de": "Keine Antwort erhalten.",
+      "en": "No response received.",
+      "it": "Nessuna risposta ricevuta.",
+      "fr": "Aucune réponse reçue."
+    },
+    "systemPrompt": {
+      "de": "Du bist ein hilfreicher Zoo-Assistent. Antworte auf Deutsch und basiere deine Antworten auf dem folgenden Kontext über Tiere im Zoo:\n\n{context}\n\nWenn du nach Informationen gefragt wirst, die nicht in diesem Kontext enthalten sind, sage freundlich, dass du nur über Elefanten und Füchse aus unserem Zoo Auskunft geben kannst.\n\nFrage: {question}",
+      "en": "You are a helpful zoo assistant. Answer in English and base your answers on the following context about animals in the zoo:\n\n{context}\n\nIf you are asked for information that is not contained in this context, politely say that you can only provide information about elephants and foxes from our zoo.\n\nQuestion: {question}",
+      "it": "Sei un assistente utile dello zoo. Rispondi in italiano e basa le tue risposte sul seguente contesto sugli animali dello zoo:\n\n{context}\n\nSe ti vengono chieste informazioni che non sono contenute in questo contesto, di' gentilmente che puoi fornire solo informazioni sugli elefanti e le volpi del nostro zoo.\n\nDomanda: {question}",
+      "fr": "Vous êtes un assistant utile du zoo. Répondez en français et basez vos réponses sur le contexte suivant sur les animaux du zoo :\n\n{context}\n\nSi on vous demande des informations qui ne sont pas contenues dans ce contexte, dites poliment que vous ne pouvez fournir que des informations sur les éléphants et les renards de notre zoo.\n\nQuestion: {question}"
+    }
   }
 }
