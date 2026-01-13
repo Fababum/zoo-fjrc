@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/components/AuthContext";
 
 
@@ -36,6 +36,8 @@ const t = translations.signIn as Record<string, any>;
 
   const auth = useAuth();
 
+  const location = useLocation();
+
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -43,7 +45,13 @@ const t = translations.signIn as Record<string, any>;
     // For now we simulate success and store a simple token.
     const fakeToken = btoa(email + ":fake-token");
     auth.login(fakeToken);
-    navigate("/");
+    // If the sign-in was requested from another flow, redirect there with state (cart/total)
+    const state = (location.state || {}) as any;
+    if (state && state.from) {
+      navigate(state.from, { state: { cart: state.cart, total: state.total } });
+    } else {
+      navigate("/");
+    }
   };
 
   return (
