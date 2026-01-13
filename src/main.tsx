@@ -5,13 +5,16 @@ import App from "./App"
 import "./index.css"   // <- sehr wichtig!
 import { BrowserRouter } from "react-router-dom"
 import { TranslationsProvider } from "./components/TranslationsContext";
+import { AuthProvider } from "./components/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <TranslationsProvider>
-        <App />
-      </TranslationsProvider>
+      <AuthProvider>
+        <TranslationsProvider>
+          <App />
+        </TranslationsProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 )

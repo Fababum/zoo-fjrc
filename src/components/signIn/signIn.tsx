@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/AuthContext";
 
 
 import { TranslationsContext } from "../TranslationsContext";
@@ -33,11 +34,16 @@ if (!context) {
 const { translations, lang } = context;
 const t = translations.signIn as Record<string, any>;
 
+  const auth = useAuth();
+
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    console.log("Username:", email);
-    console.log("Password:", password);
+    // In a real app, call the backend to authenticate and get a token.
+    // For now we simulate success and store a simple token.
+    const fakeToken = btoa(email + ":fake-token");
+    auth.login(fakeToken);
+    navigate("/");
   };
 
   return (

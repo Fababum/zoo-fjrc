@@ -1,8 +1,21 @@
 import React from "react";
-import signeUp from "./signeUp";
+import { useAuth } from "@/components/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Logout() {
-  return <div classname = {signeUp}>Logout</div>;
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    auth.logout();
+    navigate("/");
+  };
+
+  return (
+    <div>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
 }
 
 export default Logout;

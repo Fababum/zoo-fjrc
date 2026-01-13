@@ -1,4 +1,3 @@
-
 import NavBar from "./components/navBar/navBar";
 import NotFound from "./components/errorpage/errorpage";
 import SignIn from "./components/signIn/signIn";
@@ -7,7 +6,8 @@ import SignUpConfirmation from "./components/signUpConfirmation/signUpConfirmati
 import { Routes, Route } from "react-router-dom";
 import MapPage from "./components/map/map";
 import Articles from "./components/articles/articles";
-
+import FloatingTicket from "./components/floatingTicket/floatingTicket";
+import TicketBuyPage from "./components/purchaseTickets/purchaseTickets";
 
 function App() {
   const path = window.location.pathname;
@@ -18,6 +18,7 @@ function App() {
   return (
     <>
       <NavBar />
+      <FloatingTicket />
       {!isKnown && <NotFound />}
        <Routes>
             <Route path="/" element={<h1>Home</h1>} />
@@ -27,6 +28,7 @@ function App() {
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/signUpConfirmation" element={<SignUpConfirmation />} />
             <Route path="/articles" element={<Articles />} />
+            <Route path="/purchaseTickets" element={<TicketBuyPage />} />
        </Routes>
     </>
   );
