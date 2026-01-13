@@ -8,6 +8,7 @@ import MapPage from "./components/map/map";
 import Articles from "./components/articles/articles";
 import FloatingTicket from "./components/floatingTicket/floatingTicket";
 import TicketBuyPage from "./components/purchaseTickets/purchaseTickets";
+import PurchaseTicketsCardInfo from "./components/purchaseTicketsCardInfo/purchaseTicketsCardInfo";
 
 function App() {
   const path = window.location.pathname;
@@ -28,7 +29,8 @@ function App() {
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/signUpConfirmation" element={<SignUpConfirmation />} />
             <Route path="/articles" element={<Articles />} />
-            <Route path="/purchaseTickets" element={<TicketBuyPage />} />
+              <Route path="/purchaseTickets" element={<TicketBuyPage />} />
+              <Route path="/purchase-card" element={<PurchaseTicketsCardInfo />} />
        </Routes>
     </>
   );
