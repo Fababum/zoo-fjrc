@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthContext";
 
 function TicketBuyPage() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [loadingTicket, setLoadingTicket] = useState<string | null>(null);
   const [showQtyModal, setShowQtyModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -16,7 +15,7 @@ function TicketBuyPage() {
   const parsePrice = (priceStr: string) => {
     // parse strings like "CHF 32.-" to number 32
     const m = priceStr.match(/\d+(?:[.,]\d+)?/);
-    return m ? Number(m[0].replace(',', '.')) : 0;
+    return m ? Number(m[0].replace(",", ".")) : 0;
   };
 
   const handleBuy = (ticketTitle: string) => {
@@ -34,32 +33,6 @@ function TicketBuyPage() {
       const existing = cur.find((c) => c.title === title);
       if (existing) {
         return cur.map((c) => (c.title === title ? { ...c, qty: c.qty + quantity } : c));
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [pendingTicket, setPendingTicket] = useState<string | null>(null);
-
-  const handleBuy = async (ticketTitle: string) => {
-    if (!auth.isLoggedIn) {
-      setPendingTicket(ticketTitle);
-      setShowLoginModal(true);
-      return;
-    }
-
-    setLoadingTicket(ticketTitle);
-    try {
-      const res = await fetch("/api/buy-ticket", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(auth.token ? { Authorization: `Bearer ${auth.token}` } : {}),
-        },
-        body: JSON.stringify({ ticket: ticketTitle }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        alert("Purchase failed: " + text);
-      } else {
-        alert("Ticket purchased: " + ticketTitle);
       }
       return [...cur, { title, price, qty: quantity }];
     });
@@ -101,7 +74,7 @@ function TicketBuyPage() {
       {showQtyModal && selectedTicket && (
         <div style={modalOverlay} onClick={() => setShowQtyModal(false)}>
           <div style={modal} onClick={(e) => e.stopPropagation()}>
-            <h3>Anzahl wählen</h3>
+            <h3>Anzahl waehlen</h3>
             <p>{selectedTicket}</p>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <button onClick={() => setQty((q) => Math.max(1, q - 1))}>-</button>
@@ -119,7 +92,7 @@ function TicketBuyPage() {
       {/* Cart button */}
       <div style={cartButtonWrap}>
         <button style={cartButton} onClick={() => setShowCart((s) => !s)}>
-          🛒 {cartCount}
+          Cart ({cartCount})
         </button>
         {showCart && (
           <div style={cartPane} onClick={(e) => e.stopPropagation()}>
@@ -130,7 +103,7 @@ function TicketBuyPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {cart.map((c) => (
                   <div key={c.title} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>{c.title} × {c.qty}</div>
+                    <div>{c.title} x {c.qty}</div>
                     <div>CHF { (c.price * c.qty).toFixed(2) }</div>
                   </div>
                 ))}
@@ -166,27 +139,15 @@ function TicketBuyPage() {
             <h3>Login erforderlich</h3>
             <p>Bitte logge dich ein, um den Einkauf abzuschliessen.</p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
-              <button style={{ ...button, backgroundColor: '#ccc', color: '#000' }} onClick={() => setShowLoginNeeded(false)}>Abbrechen</button>
-              <button style={button} onClick={() => navigate('/signIn', { state: { from: '/purchase-card', cart, total: cartTotal } })}>Zum Login</button>
-      {showLoginModal && (
-        <div style={modalOverlay} onClick={() => setShowLoginModal(false)}>
-          <div style={modal} onClick={(e) => e.stopPropagation()}>
-            <h3>Login required</h3>
-            <p>Bitte logge dich ein, um ein Ticket zu kaufen.</p>
-            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
               <button
-                style={{ ...button, backgroundColor: "#ccc", color: "#000" }}
-                onClick={() => setShowLoginModal(false)}
+                style={{ ...button, backgroundColor: '#ccc', color: '#000' }}
+                onClick={() => setShowLoginNeeded(false)}
               >
                 Abbrechen
               </button>
               <button
                 style={button}
-                onClick={() => {
-                  setShowLoginModal(false);
-                  // navigate to sign-in; you may keep pendingTicket to resume purchase after login
-                  navigate("/signIn");
-                }}
+                onClick={() => navigate('/signIn', { state: { from: '/purchase-card', cart, total: cartTotal } })}
               >
                 Zum Login
               </button>
@@ -208,12 +169,12 @@ const tickets = [
   },
   {
     title: "Jugendliche",
-    desc: "13–17 Jahre",
+    desc: "13-17 Jahre",
     price: "CHF 26.-"
   },
   {
     title: "Kinder",
-    desc: "6–12 Jahre",
+    desc: "6-12 Jahre",
     price: "CHF 17.-"
   }
 ];
@@ -340,3 +301,4 @@ const cartPane: React.CSSProperties = {
 };
 
 export default TicketBuyPage;
+
