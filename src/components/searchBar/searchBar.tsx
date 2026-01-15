@@ -48,12 +48,12 @@ function SearchBar() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center h-10">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
       <Input
         type="search"
         placeholder="Search..."
-        className="pl-9 h-10 w-64 border-gray-100 bg-white/90 shadow-sm"
+        className="h-10 w-64 rounded-full border border-amber-100 bg-white/90 pl-9 shadow-sm transition hover:shadow-md focus-visible:ring-1 focus-visible:ring-amber-200"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onFocus={() => setShowSuggestions(true)}
@@ -61,12 +61,12 @@ function SearchBar() {
       />
       
       {showSuggestions && filteredPages.length > 0 && (
-        <div className="absolute top-full mt-1 w-full bg-white rounded-md border border-gray-100 shadow-lg max-h-60 overflow-y-auto z-50">
+        <div className="absolute top-full mt-1 w-full rounded-xl border border-amber-100 bg-white shadow-lg max-h-60 overflow-y-auto z-50">
           {filteredPages.map((page) => (
             <button
               key={page.path}
               onClick={() => handleSelectPage(page.path)}
-              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-amber-50 first:rounded-t-xl last:rounded-b-xl"
             >
               {page.name}
             </button>

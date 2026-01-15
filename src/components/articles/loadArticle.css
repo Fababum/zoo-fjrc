@@ -11,15 +11,17 @@
   border-radius: 14px;
 
   /* optional: Karten-Look */
-  background: var(--md-bg, #ffffff);
+  background: #ffffff !important;
+  color: #0f172a !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 /* Dark Mode kompatibel */
 @media (prefers-color-scheme: dark) {
   .markdown-body {
-    background: #0d1117;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   }
 }
 

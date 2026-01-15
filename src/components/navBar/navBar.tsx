@@ -2,6 +2,7 @@ import { NavLink, useParams, useNavigate } from "react-router-dom"
 import { Menu } from "lucide-react"
 import { useContext } from "react"
 import { TranslationsContext } from "../TranslationsContext"
+import { useAuth } from "../AuthContext"
 
 import {
   DropdownMenu,
@@ -22,6 +23,7 @@ function NavBar() {
   const currentLang = lang || 'de';
   const navigate = useNavigate();
   const context = useContext(TranslationsContext);
+  const { isLoggedIn, logout } = useAuth();
 
   const changeLanguage = (newLang: string) => {
     if (context) {
@@ -33,18 +35,19 @@ function NavBar() {
   };
 
   return (
-    <div className="fixed top-8 left-8 flex items-center gap-3 z-50">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 rounded-md border border-gray-100 bg-white/90 shadow-sm"
-            aria-label="Open menu"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </DropdownMenuTrigger>
+    <div className="fixed top-8 left-8 right-8 flex items-center justify-between gap-3 z-50">
+      <div className="flex items-center gap-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 rounded-full border border-amber-100 bg-white/90 shadow-sm transition hover:shadow-md"
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
 
         <DropdownMenuContent
           align="start"
@@ -54,23 +57,37 @@ function NavBar() {
           <DropdownMenuLabel className="px-2 pb-1 text-xs text-gray-500">Menu</DropdownMenuLabel>
 
           <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/signIn`}>Sign In</NavLink>
+            <NavLink to={`/${currentLang}`}>Home</NavLink>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/signUp`}>Sign Up</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/map`}>Map</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/articles`}>Articles</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/chatbot`}>Chatbot</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/purchaseTickets`}>Purchase Tickets</NavLink>
-          </DropdownMenuItem>
+          {!isLoggedIn && (
+            <>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/signIn`}>Sign In</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/signUp`}>Sign Up</NavLink>
+              </DropdownMenuItem>
+            </>
+          )}
+          {isLoggedIn && (
+            <>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/map`}>Map</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/articles`}>Articles</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/chatbot`}>Chatbot</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/purchaseTickets`}>Purchase Tickets</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                <NavLink to={`/${currentLang}/orders`}>Bestellungen</NavLink>
+              </DropdownMenuItem>
+            </>
+          )}
 
           <DropdownMenuSeparator />
 
@@ -88,13 +105,26 @@ function NavBar() {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem asChild className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-            <NavLink to={`/${currentLang}/logout`}>Log out</NavLink>
-          </DropdownMenuItem>
+          {isLoggedIn && (
+            <DropdownMenuItem
+              onClick={() => logout()}
+              className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+            >
+              Log out
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
-      </DropdownMenu>
+        </DropdownMenu>
 
-      <SearchBar />
+        <SearchBar />
+      </div>
+
+      <NavLink
+        to={`/${currentLang}`}
+        className="inline-flex h-10 items-center rounded-full border border-amber-100 bg-white/90 px-5 text-xs font-semibold tracking-[0.3em] text-amber-800 shadow-sm transition hover:shadow-md"
+      >
+        ZOO FJRC
+      </NavLink>
     </div>
   )
 }

@@ -134,37 +134,43 @@ function ArticleOverview() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white py-12 px-4 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto"></div>
-          <p className="mt-4 text-slate-600 dark:text-slate-300">Artikel werden geladen...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mx-auto"></div>
+          <p className="mt-4 text-slate-600">Artikel werden geladen...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage:
+          "linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92)), url('/Elephant.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
-              Tier-Artikel
-            </h1>
+          <div className="flex flex-col items-center justify-center gap-4 mb-6 sm:flex-row">
+            <h1 className="text-4xl font-semibold text-slate-900">Tier-Artikel</h1>
             <Button
               onClick={() => setShowCreateModal(true)}
-              className="gap-2"
+              className="gap-2 rounded-full"
               size="lg"
             >
               <Plus className="h-5 w-5" />
               Neuer Artikel
             </Button>
           </div>
-          <p className="text-lg text-slate-600 dark:text-slate-300">
+          <p className="text-base text-slate-600">
             Entdecke faszinierende Geschichten und Fakten über verschiedene Tierarten
           </p>
           {error && (
-            <p className="text-sm text-amber-600 dark:text-amber-400 mt-2">
+            <p className="text-sm text-amber-600 mt-2">
               {error}
             </p>
           )}
@@ -174,10 +180,10 @@ function ArticleOverview() {
           {articles.map((article) => (
             <Card
               key={article.id}
-              className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+              className="overflow-hidden border border-amber-100/70 bg-white/80 shadow-lg backdrop-blur transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:shadow-xl"
               onClick={() => handleArticleClick(article.id)}
             >
-              <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-700">
+              <div className="relative h-48 overflow-hidden bg-slate-200">
                 <img
                   src={article.image}
                   alt={article.title}
@@ -191,13 +197,13 @@ function ArticleOverview() {
               </div>
 
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
+                <CardTitle className="text-xl font-semibold text-slate-900">
                   {article.title}
                 </CardTitle>
               </CardHeader>
 
               <CardContent>
-                <CardDescription className="text-slate-600 dark:text-slate-300 line-clamp-3">
+                <CardDescription className="text-slate-600 line-clamp-3">
                   {article.description}
                 </CardDescription>
               </CardContent>
@@ -205,7 +211,7 @@ function ArticleOverview() {
               <CardFooter>
                 <Button
                   variant="default"
-                  className="w-full"
+                  className="w-full rounded-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleArticleClick(article.id);
@@ -221,13 +227,27 @@ function ArticleOverview() {
 
       {/* Create Article Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-800">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Neuer Artikel</h2>
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4 z-50"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, rgba(255, 248, 235, 0.95), rgba(255, 255, 255, 0.95)), url('/ElephantSquare.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-amber-100/70">
+            <div className="flex items-start justify-between gap-4 p-6 border-b border-amber-100/70 sticky top-0 bg-white/90 backdrop-blur">
+              <div>
+                <h2 className="text-2xl font-semibold text-slate-900">Neuer Artikel</h2>
+                <p className="text-sm text-slate-600 mt-1">
+                  Füge Titel, Text und optional ein Bild hinzu.
+                </p>
+              </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                className="text-slate-500 hover:text-slate-700"
+                aria-label="Modal schließen"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -235,27 +255,63 @@ function ArticleOverview() {
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Markdown-Text
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Inhalt (Markdown)
                 </label>
                 <textarea
                   value={markdownInput}
                   onChange={(e) => setMarkdownInput(e.target.value)}
-                  placeholder="Artikel-Text hier eingeben..."
-                  className="w-full h-64 p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 font-mono text-sm"
+                  placeholder={
+                    "# Titel des Artikels\n\nKurze Einleitung...\n\n![Bildbeschreibung](https://...)\n\n## Abschnitt\nText..."
+                  }
+                  className="w-full h-64 p-4 border border-slate-200 rounded-xl bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-200 font-mono text-sm shadow-sm"
                 />
+                <div className="mt-2 text-xs text-slate-500">
+                  Tipp: Starte mit <span className="font-semibold"># Titel</span>. Bilder:{" "}
+                  <span className="font-semibold">![Bild](url)</span>. Maximal 2-3 kurze Abschnitte.
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() =>
+                      setMarkdownInput(
+                        (prev) =>
+                          prev ||
+                          "# Titel des Artikels\n\nKurze Einleitung...\n\n## Abschnitt\nText...\n"
+                      )
+                    }
+                  >
+                    Vorlage einfügen
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() =>
+                      setMarkdownInput((prev) =>
+                        `${prev}\n\n![Bildbeschreibung](https://...)`
+                      )
+                    }
+                  >
+                    Bild-Platzhalter
+                  </Button>
+                </div>
               </div>
 
-              <div className="flex gap-3 justify-end pt-4 border-t border-slate-200 dark:border-slate-700">
+              <div className="flex flex-col-reverse gap-3 justify-end pt-4 border-t border-amber-100/70 sm:flex-row">
                 <Button
                   variant="outline"
                   onClick={() => setShowCreateModal(false)}
+                  className="rounded-full"
                 >
                   Abbrechen
                 </Button>
                 <Button
                   onClick={handleCreateArticle}
                   disabled={creating || !markdownInput.trim()}
+                  className="rounded-full"
                 >
                   {creating ? 'Erstelle...' : 'Artikel erstellen'}
                 </Button>

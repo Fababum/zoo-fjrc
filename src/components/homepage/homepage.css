@@ -1,23 +1,57 @@
 .background {
-  z-index: -1;
-
-  position: relative; /* damit absolute Positionierung innerhalb dieser Box funktioniert */
-  background-image: url("Elephant.png");
+  min-height: 100vh;
+  background-image: linear-gradient(
+      135deg,
+      rgba(255, 248, 235, 0.92),
+      rgba(255, 255, 255, 0.92)
+    ),
+    url("/Serengeti_Elefantenherde1.png");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
   display: flex;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px;
 }
 
-.contend {
+.home-content {
+  width: min(1200px, 100%);
   display: flex;
-  flex-wrap: wrap;          /* mehrere Reihen */
-  gap: 12px;
-  align-items: stretch;     /* 🔑 gleiche Höhe pro Zeile */
-  padding: 12px;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.home-title {
+  text-align: center;
+}
+
+.home-kicker {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #92400e;
+  font-weight: 700;
+}
+
+.home-title h1 {
+  margin: 8px 0 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.home-title p {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.home-widgets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: stretch;
 }
 
 body {

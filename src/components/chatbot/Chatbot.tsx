@@ -5,7 +5,6 @@ import { Input } from "../ui/input";
 import { Send, Bot, User } from "lucide-react";
 import { GoogleGenAI } from "@google/genai";
 import { TranslationsContext } from "../TranslationsContext";
-import "./chatbot.css";
 
 interface Message {
   role: "user" | "assistant";
@@ -171,27 +170,35 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="chatbot-background">
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-10"
+      style={{
+        backgroundImage:
+          "linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92)), url('/leu.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-4xl mx-auto w-full">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-semibold text-slate-900 mb-3">
             {t.title[lang as keyof typeof t.title]}
           </h1>
-          <p className="text-lg text-white drop-shadow-md">
+          <p className="text-base text-slate-600">
             {t.subtitle[lang as keyof typeof t.subtitle]}
           </p>
         </div>
 
-        <Card className="chatbot-card overflow-hidden hover:shadow-xl transition-all duration-300">
+        <Card className="overflow-hidden border border-amber-100/70 bg-white/80 shadow-2xl backdrop-blur">
           <div className="h-[600px] flex flex-col">
-            <CardHeader className="border-b bg-white dark:bg-slate-800">
-              <CardTitle className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Bot className="h-6 w-6 text-slate-900 dark:text-white" />
+            <CardHeader className="border-b border-amber-100/70">
+              <CardTitle className="text-xl font-semibold text-slate-900 flex items-center gap-2">
+                <Bot className="h-6 w-6 text-slate-900" />
                 {t.chatAssistant[lang as keyof typeof t.chatAssistant]}
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="flex-1 overflow-y-auto p-6 space-y-4 bg-white dark:bg-slate-800">
+            <CardContent className="flex-1 overflow-y-auto p-6 space-y-4">
               {messages.map((message, index) => (
                 <div
                   key={index}
@@ -201,7 +208,7 @@ export default function Chatbot() {
                 >
                   {message.role === "assistant" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-slate-900 dark:bg-slate-700 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center">
                         <Bot className="h-5 w-5 text-white" />
                       </div>
                     </div>
@@ -210,8 +217,8 @@ export default function Chatbot() {
                   <div
                     className={`max-w-[80%] rounded-lg px-4 py-2 ${
                       message.role === "user"
-                        ? "bg-slate-900 dark:bg-slate-700 text-white"
-                        : "bg-slate-100 dark:bg-slate-600 text-slate-900 dark:text-white"
+                        ? "bg-slate-900 text-white"
+                        : "bg-slate-100 text-slate-900"
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -219,7 +226,7 @@ export default function Chatbot() {
 
                   {message.role === "user" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-slate-600 dark:bg-slate-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center">
                         <User className="h-5 w-5 text-white" />
                       </div>
                     </div>
@@ -230,11 +237,11 @@ export default function Chatbot() {
               {isLoading && (
                 <div className="flex gap-3 justify-start">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 rounded-full bg-slate-900 dark:bg-slate-700 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center">
                       <Bot className="h-5 w-5 text-white" />
                     </div>
                   </div>
-                  <div className="bg-slate-100 dark:bg-slate-600 rounded-lg px-4 py-2">
+                  <div className="bg-slate-100 rounded-lg px-4 py-2">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-100" />
@@ -246,7 +253,7 @@ export default function Chatbot() {
               <div ref={messagesEndRef} />
             </CardContent>
 
-            <CardFooter className="border-t p-4 bg-white dark:bg-slate-800">
+            <CardFooter className="border-t border-amber-100/70 p-4">
               <div className="flex gap-2 w-full">
                 <Input
                   value={input}
@@ -260,7 +267,7 @@ export default function Chatbot() {
                   onClick={sendMessage}
                   disabled={isLoading || !input.trim()}
                   size="icon"
-                  className="hover:bg-gray-200 hover:text-black"
+                  className="rounded-full"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
@@ -269,7 +276,7 @@ export default function Chatbot() {
           </div>
         </Card>
 
-        <div className="mt-4 text-center text-sm text-white drop-shadow-md">
+        <div className="mt-4 text-center text-sm text-slate-600">
           {t.tip[lang as keyof typeof t.tip]}
         </div>
       </div>

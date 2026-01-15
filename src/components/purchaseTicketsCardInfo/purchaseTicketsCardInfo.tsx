@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CreditCard, Check, Lock, Trash2, Edit2, X } from "lucide-react";
+import { useAuth } from "@/components/AuthContext";
+import { createOrder } from "@/api/orders";
+import type { Order } from "@/api/orders";
+import {
+  createPaymentMethod,
+  deletePaymentMethod,
+  getPaymentMethods,
+  updatePaymentMethod,
+} from "@/api/paymentMethods";
+import type { PaymentMethod } from "@/api/paymentMethods";
+import { ToastViewport, useToast } from "@/components/ui/toast";
 
 type CartItem = { title: string; price: number; qty: number };
-type SavedCard = {
-  id: number;
-  cardType: string;
-  last4: string;
-  firstName: string;
-  lastName: string;
-  street: string;
-  houseNumber: string;
-  addressExtra: string;
-  postalCode: string;
-  city: string;
-  country: string;
-  phone: string;
-};
+type SavedCard = PaymentMethod;
 
 function PurchaseTicketsCardInfo() {
   const location = useLocation();
@@ -44,12 +42,23 @@ function PurchaseTicketsCardInfo() {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState<SavedCard | null>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const { toasts, pushToast, dismissToast } = useToast();
 
   useEffect(() => {
-    const raw = localStorage.getItem("savedCards");
-    if (raw) setSavedCards(JSON.parse(raw));
-  }, []);
+    const loadCards = async () => {
+      if (!auth.token) return;
+      try {
+        const data = await getPaymentMethods(auth.token);
+        setSavedCards(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadCards();
+  }, [auth.token]);
 
   useEffect(() => {
   if (selectedCardId !== "new") {
@@ -82,7 +91,54 @@ function PurchaseTicketsCardInfo() {
     setCvv("");
     setCardType("visa");
   }
-}, [selectedCardId, savedCards]);
+  }, [selectedCardId, savedCards]);
+
+  const ordersStorageKey = `zoo.orders.${auth.user?.id ?? "guest"}`;
+
+  const persistOrder = async () => {
+    if (!cart.length || !auth.token) return;
+
+    const fallbackOrder: Order = {
+      id: Date.now(),
+      userId: auth.user?.id ?? 0,
+      items: cart,
+      total,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const created = await createOrder(
+        { items: cart, total },
+        auth.token
+      );
+      const raw = localStorage.getItem(ordersStorageKey);
+      const parsed = raw ? (JSON.parse(raw) as Order[]) : [];
+      localStorage.setItem(
+        ordersStorageKey,
+        JSON.stringify([created, ...parsed])
+      );
+    } catch {
+      const raw = localStorage.getItem(ordersStorageKey);
+      const parsed = raw ? (JSON.parse(raw) as Order[]) : [];
+      localStorage.setItem(
+        ordersStorageKey,
+        JSON.stringify([fallbackOrder, ...parsed])
+      );
+    }
+  };
+
+  const resolveOrdersPath = () => {
+    const segment = window.location.pathname.split("/")[1];
+    const isLang = ["de", "en", "fr", "it"].includes(segment);
+    return isLang ? `/${segment}/orders` : "/orders";
+  };
+
+  const handleOrderSuccess = () => {
+    pushToast("Tickets erfolgreich gekauft.", "success");
+    window.setTimeout(() => {
+      navigate(resolveOrdersPath());
+    }, 600);
+  };
 
   const handlePay = () => {
     if (!cardNumber && selectedCardId === "new") {
@@ -97,39 +153,60 @@ function PurchaseTicketsCardInfo() {
     if (selectedCardId === "new" && cardNumber && expiry && cvv) {
       setShowSaveModal(true);
     } else {
-      setShowSuccessModal(true);
+      void persistOrder();
+      handleOrderSuccess();
     }
   };
 
-  const handleSaveCard = () => {
-    const card: SavedCard = {
-      id: Date.now(),
-      cardType,
-      last4: cardNumber.slice(-4),
-      firstName,
-      lastName,
-      street,
-      houseNumber,
-      addressExtra,
-      postalCode,
-      city,
-      country,
-      phone
-    };
-    const next = [card, ...savedCards];
-    setSavedCards(next);
-    localStorage.setItem("savedCards", JSON.stringify(next));
-    setShowSaveModal(false);
-    setShowSuccessModal(true);
+  const handleSaveCard = async () => {
+    if (!auth.token) return;
+
+    const [expYear, expMonth] = expiry
+      ? expiry.split("-").map((value) => Number(value))
+      : [0, 0];
+
+    try {
+      const created = await createPaymentMethod(
+        {
+          cardType,
+          last4: cardNumber.slice(-4),
+          expMonth,
+          expYear,
+          firstName,
+          lastName,
+          street,
+          houseNumber,
+          addressExtra,
+          postalCode,
+          city,
+          country,
+          phone,
+        },
+        auth.token
+      );
+      setSavedCards((prev) => [created, ...prev]);
+      setShowSaveModal(false);
+      void persistOrder();
+      handleOrderSuccess();
+    } catch (err) {
+      console.error(err);
+      alert("Speichern der Karte fehlgeschlagen");
+    }
   };
 
-  const handleDeleteCard = (id: number) => {
+  const handleDeleteCard = async (id: number) => {
     if (confirm("Möchten Sie diese Karte wirklich löschen?")) {
-      const next = savedCards.filter(c => c.id !== id);
-      setSavedCards(next);
-      localStorage.setItem("savedCards", JSON.stringify(next));
-      if (String(id) === selectedCardId) {
-        setSelectedCardId("new");
+      if (!auth.token) return;
+      try {
+        await deletePaymentMethod(id, auth.token);
+        const next = savedCards.filter((c) => c.id !== id);
+        setSavedCards(next);
+        if (String(id) === selectedCardId) {
+          setSelectedCardId("new");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Löschen der Karte fehlgeschlagen");
       }
     }
   };
@@ -139,27 +216,52 @@ function PurchaseTicketsCardInfo() {
     setShowEditModal(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editingCard) return;
-    
-    const next = savedCards.map(c => 
-      c.id === editingCard.id ? editingCard : c
-    );
-    setSavedCards(next);
-    localStorage.setItem("savedCards", JSON.stringify(next));
-    setShowEditModal(false);
-    setEditingCard(null);
-    alert("Änderungen gespeichert!");
-    
-    if (String(editingCard.id) === selectedCardId) {
-      setFirstName(editingCard.firstName);
-      setLastName(editingCard.lastName);
-      setStreet(editingCard.street);
-      setHouseNumber(editingCard.houseNumber);
-      setAddressExtra(editingCard.addressExtra);
-      setPostalCode(editingCard.postalCode);
-      setCity(editingCard.city);
-      setPhone(editingCard.phone);
+
+    if (!auth.token) return;
+
+    try {
+      const updated = await updatePaymentMethod(
+        editingCard.id,
+        {
+          cardType: editingCard.cardType,
+          last4: editingCard.last4,
+          expMonth: editingCard.expMonth,
+          expYear: editingCard.expYear,
+          firstName: editingCard.firstName,
+          lastName: editingCard.lastName,
+          street: editingCard.street,
+          houseNumber: editingCard.houseNumber,
+          addressExtra: editingCard.addressExtra,
+          postalCode: editingCard.postalCode,
+          city: editingCard.city,
+          country: editingCard.country,
+          phone: editingCard.phone,
+        },
+        auth.token
+      );
+      const next = savedCards.map((c) =>
+        c.id === updated.id ? updated : c
+      );
+      setSavedCards(next);
+      setShowEditModal(false);
+      setEditingCard(null);
+      alert("Änderungen gespeichert!");
+
+      if (String(updated.id) === selectedCardId) {
+        setFirstName(updated.firstName);
+        setLastName(updated.lastName);
+        setStreet(updated.street);
+        setHouseNumber(updated.houseNumber);
+        setAddressExtra(updated.addressExtra);
+        setPostalCode(updated.postalCode);
+        setCity(updated.city);
+        setPhone(updated.phone);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Speichern der Änderungen fehlgeschlagen");
     }
   };
 
@@ -227,12 +329,15 @@ function PurchaseTicketsCardInfo() {
                 {savedCards.map(card => (
                   <div key={card.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">
-                        {card.cardType.toUpperCase()} •••• {card.last4}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {card.firstName} {card.lastName}
-                      </div>
+                    <div className="font-medium text-gray-900">
+                      {card.cardType.toUpperCase()} •••• {card.last4}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Gültig bis {String(card.expMonth).padStart(2, "0")}/{card.expYear}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {card.firstName} {card.lastName}
+                    </div>
                       <div className="text-xs text-gray-500">
                         {card.street} {card.houseNumber}, {card.postalCode} {card.city}
                       </div>
@@ -457,7 +562,8 @@ function PurchaseTicketsCardInfo() {
               <button
                 onClick={() => {
                   setShowSaveModal(false);
-                  setShowSuccessModal(true);
+                  void persistOrder();
+                  handleOrderSuccess();
                 }}
                 className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-all"
               >
@@ -470,28 +576,6 @@ function PurchaseTicketsCardInfo() {
                 Ja, speichern
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              {cart.length === 1 ? 'Ticket' : 'Tickets'} erfolgreich gekauft!
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Ihre Bestellung wurde erfolgreich abgeschlossen. Sie erhalten in Kürze eine Bestätigung per E-Mail.
-            </p>
-            <button
-              onClick={() => setShowSuccessModal(false)}
-              className="w-full px-4 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white font-semibold rounded-lg transition-all"
-            >
-              Schließen
-            </button>
           </div>
         </div>
       )}
@@ -627,6 +711,8 @@ function PurchaseTicketsCardInfo() {
           </div>
         </div>
       )}
+
+      <ToastViewport toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

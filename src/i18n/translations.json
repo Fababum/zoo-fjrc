@@ -18,6 +18,18 @@
       "it": "Email",
       "fr": "E-mail"
     },
+    "name": {
+      "de": "Name",
+      "en": "Name",
+      "it": "Nome",
+      "fr": "Nom"
+    },
+    "namePlaceholder": {
+      "de": "Max Mustermann",
+      "en": "John Doe",
+      "it": "Mario Rossi",
+      "fr": "Jean Dupont"
+    },
     "password": {
       "de": "Passwort",
       "en": "Password",

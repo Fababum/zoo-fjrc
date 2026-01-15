@@ -97,10 +97,10 @@ export default function LoadArticle() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white py-12 px-4 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto"></div>
-          <p className="mt-4 text-slate-600 dark:text-slate-300">Artikel wird geladen...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mx-auto"></div>
+          <p className="mt-4 text-slate-600">Artikel wird geladen...</p>
         </div>
       </div>
     );
@@ -108,24 +108,32 @@ export default function LoadArticle() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white py-12 px-4 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <p className="text-rose-600">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage:
+          "linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92)), url('/Fuchs.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Action Buttons */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
         {!isEditing ? (
           <>
             <Button
               onClick={handleEdit}
-              className="gap-2 bg-blue-600 hover:bg-blue-700"
+              className="gap-2 rounded-full"
               size="lg"
             >
               <Edit className="h-5 w-5" />
@@ -133,7 +141,7 @@ export default function LoadArticle() {
             </Button>
             <Button
               onClick={handleDelete}
-              className="gap-2 bg-red-600 hover:bg-red-700"
+              className="gap-2 rounded-full bg-rose-500 hover:bg-rose-600"
               size="lg"
             >
               <Trash2 className="h-5 w-5" />
@@ -145,7 +153,7 @@ export default function LoadArticle() {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="gap-2 bg-green-600 hover:bg-green-700"
+              className="gap-2 rounded-full"
               size="lg"
             >
               <Save className="h-5 w-5" />
@@ -154,6 +162,7 @@ export default function LoadArticle() {
             <Button
               onClick={handleCancel}
               variant="outline"
+              className="rounded-full"
               size="lg"
             >
               <X className="h-5 w-5" />
@@ -165,18 +174,18 @@ export default function LoadArticle() {
 
         {/* Edit Mode or View Mode */}
         {isEditing ? (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-8">
-            <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
+          <div className="bg-white/80 border border-amber-100/70 rounded-lg shadow-2xl backdrop-blur p-8">
+            <h2 className="text-2xl font-semibold mb-4 text-slate-900">
               Artikel bearbeiten
             </h2>
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full h-[70vh] p-4 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+              className="w-full h-[70vh] p-4 border border-slate-200 rounded-lg bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-200 font-mono text-sm"
             />
           </div>
         ) : (
-          <article className="markdown-body bg-white dark:bg-slate-800 rounded-lg shadow-xl p-8">
+          <article className="markdown-body bg-white text-slate-900 border border-amber-100/70 rounded-lg shadow-2xl p-8">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
@@ -216,7 +225,7 @@ export default function LoadArticle() {
           <Button
             onClick={handleBack}
             variant="outline"
-            className="gap-2"
+            className="gap-2 rounded-full"
             size="lg"
           >
             <ArrowLeft className="h-5 w-5" />
