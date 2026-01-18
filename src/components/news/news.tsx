@@ -1,88 +1,68 @@
+import * as React from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { TranslationsContext } from "../TranslationsContext"
 
-type NewsArticle = {
-  slug: string
-  title: string
-  subtitle: string
+type TranslatedArticle = {
+  title: Record<"de" | "en" | "it" | "fr", string>
+  subtitle: Record<"de" | "en" | "it" | "fr", string>
   image: string
-  body: string[]
-  highlights?: string[]
+  body: Record<"de" | "en" | "it" | "fr", string[]>
+  highlights?: Record<"de" | "en" | "it" | "fr", string[]>
+  tip?: Record<"de" | "en" | "it" | "fr", string>
 }
-
-const newsArticles: NewsArticle[] = [
-  {
-    slug: "feeding-time",
-    title: "Neue Fütterungszeiten",
-    subtitle: "Mehr Nähe zu den Tieren – täglich live dabei.",
-    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80",
-    body: [
-      "Ab sofort finden die Fütterungen im Savannenbereich zweimal täglich statt – perfekt, um die Tiere aktiv zu erleben.",
-      "Beste Zeiten: 10:30 Uhr und 15:30 Uhr. Bitte bleib hinter den Markierungen und halte Abstand.",
-      "Unser Team erklärt kurz, was die Tiere fressen und warum bestimmte Futterarten wichtig sind.",
-    ],
-    highlights: ["10:30 & 15:30 Uhr", "Savannenbereich", "Kurzinfos vom Team"],
-    tip: "Komm 10–15 Minuten früher, so bekommst du einen guten Platz.",
-  },
-  {
-    slug: "baby-animals",
-    title: "Nachwuchs im Zoo",
-    subtitle: "Frischer Nachwuchs – sanfte Momente im Alltag.",
-    image: "/Fuchs.png",
-    body: [
-      "In den letzten Wochen gab es Nachwuchs bei den Erdmännchen und Giraffen.",
-      "Die Jungtiere sind besonders vormittags aktiv und bleiben gerne in der Nähe ihrer Mutter.",
-      "Bitte sei besonders ruhig – die Kleinen reagieren sensibel auf laute Geräusche.",
-    ],
-    highlights: ["Vormittags aktiv", "Ruhige Beobachtung", "Mehrere Gehege"],
-    tip: "Leise bleiben lohnt sich – so siehst du mehr von den Jungtieren.",
-  },
-  {
-    slug: "new-enclosure",
-    title: "Neues Gehege eröffnet",
-    subtitle: "Mehr Raum, mehr Rückzug, bessere Sicht.",
-    image: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1600&q=80",
-    body: [
-      "Das neue Gehege verbindet Beobachtungspunkte mit naturnaher Bepflanzung.",
-      "So können sich die Tiere zurückziehen, während Besucher dennoch Einblicke erhalten.",
-      "Entdecke die neuen Wege und Aussichtspunkte direkt vor Ort.",
-    ],
-    highlights: ["Neue Wege", "Naturnahe Pflanzen", "Mehr Rückzugsorte"],
-    tip: "Plane eine kleine Runde: Der neue Bereich ist ideal für einen kurzen Abstecher.",
-  },
-]
 
 export default function NewsArticlePage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-  const article = newsArticles.find((item) => item.slug === slug)
+
+  const context = React.useContext(TranslationsContext)
+  if (!context) return null
+
+  const { translations, lang } = context
+  const t = translations.newsArticlePage
+  const langKey = lang as keyof typeof t.ui.newsLabel
+
+  const articles = t.articles as Record<string, TranslatedArticle>
+  const article = slug ? articles?.[slug] : undefined
 
   if (!article) {
     return (
-    <div
-      className="min-h-screen px-4 py-12 flex items-center justify-center"
-      style={{
-        backgroundImage:
-          "linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92)), url('/Elephant.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+      <div
+        className="min-h-screen px-4 py-12 flex items-center justify-center"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92)), url('/Elephant.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="text-center">
-          <div className="text-xl font-semibold text-slate-900">Artikel nicht gefunden</div>
-          <p className="text-sm text-slate-600 mt-2">Bitte prüfe den Link.</p>
+          <div className="text-xl font-semibold text-slate-900">
+            {t.ui.notFoundTitle[langKey]}
+          </div>
+          <p className="text-sm text-slate-600 mt-2">
+            {t.ui.notFoundSubtitle[langKey]}
+          </p>
           <Button
             type="button"
             variant="outline"
             className="mt-4 rounded-full"
             onClick={() => navigate("/")}
           >
-            Zur Homepage
+            {t.ui.backHome[langKey]}
           </Button>
         </div>
       </div>
     )
   }
+
+  const title = article.title[langKey]
+  const subtitle = article.subtitle[langKey]
+  const body = article.body[langKey] ?? []
+  const highlights = article.highlights?.[langKey] ?? []
+  const tip =
+    article.tip?.[langKey] ?? t.ui.defaultTip[langKey]
 
   return (
     <div
@@ -97,12 +77,12 @@ export default function NewsArticlePage() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <div className="text-xs tracking-[0.3em] uppercase text-amber-800 font-semibold">
-            News
+            {t.ui.newsLabel[langKey]}
           </div>
           <h1 className="text-3xl font-semibold text-slate-900 mt-2">
-            {article.title}
+            {title}
           </h1>
-          <p className="text-base text-slate-600 mt-2">{article.subtitle}</p>
+          <p className="text-base text-slate-600 mt-2">{subtitle}</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
@@ -110,12 +90,12 @@ export default function NewsArticlePage() {
             <div className="h-64 w-full overflow-hidden">
               <img
                 src={article.image}
-                alt={article.title}
+                alt={title}
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="p-8 space-y-4 text-sm leading-6 text-slate-700">
-              {article.body.map((paragraph) => (
+              {body.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
@@ -124,10 +104,10 @@ export default function NewsArticlePage() {
           <div className="space-y-4">
             <div className="rounded-2xl border border-amber-100/70 bg-white/90 shadow-lg p-6">
               <div className="text-xs tracking-[0.3em] uppercase text-amber-800 font-semibold">
-                Highlights
+                {t.ui.highlightsLabel[langKey]}
               </div>
               <div className="mt-4 space-y-3 text-sm text-slate-700">
-                {(article.highlights ?? []).map((item) => (
+                {highlights.map((item) => (
                   <div
                     key={item}
                     className="rounded-xl border border-amber-100/70 bg-amber-50 px-4 py-3"
@@ -137,14 +117,12 @@ export default function NewsArticlePage() {
                 ))}
               </div>
             </div>
+
             <div className="rounded-2xl border border-amber-100/70 bg-white/90 shadow-lg p-6">
               <div className="text-xs tracking-[0.3em] uppercase text-amber-800 font-semibold">
-                Tipp
+                {t.ui.tipLabel[langKey]}
               </div>
-              <p className="mt-3 text-sm text-slate-700">
-                {article.tip ??
-                  "Plane deinen Besuch mit genug Zeit für die jeweiligen Bereiche – die Wege sind weit, aber lohnen sich."}
-              </p>
+              <p className="mt-3 text-sm text-slate-700">{tip}</p>
             </div>
           </div>
         </div>
@@ -156,7 +134,7 @@ export default function NewsArticlePage() {
             className="rounded-full"
             onClick={() => navigate("/")}
           >
-            Zur Homepage
+            {t.ui.backHome[langKey]}
           </Button>
         </div>
       </div>

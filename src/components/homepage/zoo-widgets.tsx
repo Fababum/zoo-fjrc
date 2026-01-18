@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { TranslationsContext } from "../TranslationsContext";
 
 /** ---------------------------
  *  Reusable tile (shared)
@@ -108,29 +109,42 @@ type ZooVisitPlannerWidgetProps = {
 }
 
 export function ZooVisitPlannerWidget({
-  title = "Zoobesuch Planen",
-  description = "Tickets, Anreise und Zeiten auf einen Blick.",
-  actions = [
-    {
-      title: "Tickets Kaufen",
-      subtitle: "Online buchen und Zeit sparen.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=1200&q=80",
-      ctaLabel: "Tickets Kaufen",
-      href: "/purchaseTickets",
-    },
-    {
-      title: "Anreise Planen",
-      subtitle: "So findest du den schnellsten Weg.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=1200&q=80",
-      ctaLabel: "Anreise Planen",
-      href: "/map",
-    },
-  ],
+  title,
+  description,
+  actions,
   className,
 }: ZooVisitPlannerWidgetProps) {
   const navigate = useNavigate()
+  const context = React.useContext(TranslationsContext)
+  if (!context) return null
+
+  const { translations, lang } = context
+  const t = translations.zooWidgets
+  const langKey = lang as keyof typeof t.visitPlanner.title
+
+  const resolvedTitle = title ?? t.visitPlanner.title[langKey]
+  const resolvedDescription = description ?? t.visitPlanner.description[langKey]
+
+  const resolvedActions: ZooPlanAction[] =
+    actions ?? [
+      {
+        title: t.visitPlanner.actions.tickets.title[langKey],
+        subtitle: t.visitPlanner.actions.tickets.subtitle[langKey],
+        imageSrc:
+          "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=1200&q=80",
+        ctaLabel: t.visitPlanner.actions.tickets.ctaLabel[langKey],
+        href: "/purchaseTickets",
+      },
+      {
+        title: t.visitPlanner.actions.directions.title[langKey],
+        subtitle: t.visitPlanner.actions.directions.subtitle[langKey],
+        imageSrc:
+          "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=1200&q=80",
+        ctaLabel: t.visitPlanner.actions.directions.ctaLabel[langKey],
+        href: "/map",
+      },
+    ]
+
   const resolvePath = React.useCallback((path: string) => {
     const segment = window.location.pathname.split("/")[1]
     const isLang = ["de", "en", "fr", "it"].includes(segment)
@@ -147,16 +161,16 @@ export function ZooVisitPlannerWidget({
     >
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-semibold text-slate-900">
-          {title}
+          {resolvedTitle}
         </CardTitle>
         <CardDescription className="text-sm text-slate-600">
-          {description}
+          {resolvedDescription}
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <div className="grid grid-cols-2 gap-5">
-          {actions.slice(0, 2).map((a) => (
+          {resolvedActions.slice(0, 2).map((a) => (
             <ImageCtaTile
               key={a.title}
               title={a.title}
@@ -180,6 +194,214 @@ export function ZooVisitPlannerWidget({
 }
 
 /** ---------------------------
+ *  Widget 4: Tagesplan (30-Minuten Slots)
+ *  --------------------------- */
+
+type ScheduleEvent = {
+  /** "HH:mm" */
+  start: string
+  /** optional, wenn du es anzeigen willst (z.B. "10:30") */
+  end?: string
+  /** translation-key, z.B. "feedingSavannah" */
+  key: string
+  /** optional translation-key, z.B. "savannahArea" */
+  locationKey?: string
+  /** optional icon name (nur als string, falls du später Icons willst) */
+  kind?: string
+}
+
+type DailyScheduleJson = {
+  /** 30-min slot start/end as "HH:mm" */
+  day: {
+    start: string
+    end: string
+  }
+  /** events grouped by slot start time "HH:mm" */
+  slots: Record<string, ScheduleEvent[]>
+}
+
+/**
+ * Platzhalter-JSON (später kannst du das aus einer Datei/API laden)
+ * Wichtig: Die keys (key/locationKey) werden über translations gerendert.
+ */
+const DAILY_SCHEDULE_PLACEHOLDER: DailyScheduleJson = {
+  day: { start: "08:00", end: "18:00" },
+  slots: {
+    "08:00": [{ start: "08:00", end: "08:30", key: "gatesOpen", locationKey: "mainEntrance" }],
+    "09:30": [{ start: "09:30", end: "10:00", key: "kidsQuiz", locationKey: "educationCorner" }],
+    "10:30": [
+      { start: "10:30", end: "11:00", key: "feedingSavannah", locationKey: "savannahArea" },
+      { start: "10:30", end: "11:00", key: "foxTalk", locationKey: "foxEnclosure" },
+    ],
+    "12:00": [{ start: "12:00", end: "12:30", key: "keeperTalk", locationKey: "elephantHouse" }],
+    "14:00": [{ start: "14:00", end: "14:30", key: "behindScenes", locationKey: "meetingPoint" }],
+    "15:30": [{ start: "15:30", end: "16:00", key: "feedingSavannah", locationKey: "savannahArea" }],
+    "17:30": [{ start: "17:30", end: "18:00", key: "gatesClose", locationKey: "mainEntrance" }],
+  },
+}
+
+type DailyScheduleWidgetProps = {
+  className?: string
+  title?: string
+  description?: string
+  /** Optional: inject schedule JSON from outside (API, file, etc.) */
+  schedule?: DailyScheduleJson
+  /** Optional: override time window */
+  start?: string
+  end?: string
+}
+
+function parseTimeToMinutes(hhmm: string) {
+  const [h, m] = hhmm.split(":").map((v) => Number(v))
+  if (Number.isNaN(h) || Number.isNaN(m)) return 0
+  return h * 60 + m
+}
+
+function minutesToHHmm(minutes: number) {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  const hh = String(h).padStart(2, "0")
+  const mm = String(m).padStart(2, "0")
+  return `${hh}:${mm}`
+}
+
+function buildHalfHourSlots(start: string, end: string) {
+  const startMin = parseTimeToMinutes(start)
+  const endMin = parseTimeToMinutes(end)
+  const slots: string[] = []
+  for (let t = startMin; t < endMin; t += 30) {
+    slots.push(minutesToHHmm(t))
+  }
+  return slots
+}
+
+export function DailyScheduleWidget({
+  className,
+  title,
+  description,
+  schedule,
+  start,
+  end,
+}: DailyScheduleWidgetProps) {
+  const context = React.useContext(TranslationsContext)
+  if (!context) return null
+
+  const { translations, lang } = context
+  const t = translations.zooWidgets
+  const langKey = lang as keyof typeof t.dailySchedule.title
+
+  const data = schedule ?? DAILY_SCHEDULE_PLACEHOLDER
+  const windowStart = start ?? data.day.start
+  const windowEnd = end ?? data.day.end
+
+  const slots = React.useMemo(
+    () => buildHalfHourSlots(windowStart, windowEnd),
+    [windowStart, windowEnd]
+  )
+
+  const eventTitles = t.dailySchedule.events
+  const locations = t.dailySchedule.locations
+
+  return (
+    <Card
+      className={cn(
+        "w-[620px] rounded-3xl border border-amber-100/70 bg-white",
+        "shadow-[0_18px_40px_rgba(15,23,42,0.14)]",
+        className
+      )}
+    >
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-semibold text-slate-900">
+          {title ?? t.dailySchedule.title[langKey]}
+        </CardTitle>
+        <CardDescription className="text-sm text-slate-600">
+          {description ?? t.dailySchedule.description[langKey]}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <div className="rounded-2xl border border-amber-100/70 bg-amber-50/40 overflow-hidden">
+          <div className="max-h-[320px] overflow-auto">
+            {slots.map((time) => {
+              const events = data.slots?.[time] ?? []
+              return (
+                <div
+                  key={time}
+                  className={cn(
+                    "grid grid-cols-[88px_1fr] gap-4 px-5 py-4",
+                    "border-b border-amber-100/70 last:border-b-0"
+                  )}
+                >
+                  <div className="text-sm font-semibold text-slate-900">
+                    {time}
+                  </div>
+
+                  {events.length === 0 ? (
+                    <div className="text-sm text-slate-500">
+                      {t.dailySchedule.noEvents[langKey]}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {events.map((ev, idx) => {
+                        const titleText =
+                          eventTitles?.[ev.key as keyof typeof eventTitles]?.[langKey] ??
+                          ev.key
+
+                        const locationText = ev.locationKey
+                          ? locations?.[ev.locationKey as keyof typeof locations]?.[langKey] ?? ev.locationKey
+                          : undefined
+
+                        return (
+                          <div
+                            key={`${time}-${ev.key}-${idx}`}
+                            className={cn(
+                              "rounded-xl border border-amber-100/70 bg-white",
+                              "px-4 py-3 shadow-sm"
+                            )}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="text-sm font-medium text-slate-900">
+                                {titleText}
+                              </div>
+                              <div className="text-xs text-slate-500 whitespace-nowrap">
+                                {ev.end ? `${ev.start}–${ev.end}` : ev.start}
+                              </div>
+                            </div>
+
+                            {locationText ? (
+                              <div className="mt-1 text-xs text-slate-600">
+                                <span className="font-semibold">
+                                  {t.dailySchedule.locationLabel[langKey]}:
+                                </span>{" "}
+                                {locationText}
+                              </div>
+                            ) : null}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+          <span>
+            {t.dailySchedule.timeWindowLabel[langKey]}: {windowStart}–{windowEnd}
+          </span>
+          <span>
+            {t.dailySchedule.slotSizeLabel[langKey]}: 30 {t.dailySchedule.minutes[langKey]}
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+
+/** ---------------------------
  *  Widget 2: What's new?
  *  --------------------------- */
 export type WhatsNewItem = {
@@ -199,37 +421,49 @@ type WhatsNewWidgetProps = {
 }
 
 export function WhatsNewWidget({
-  title = "What’s new?",
-  description = "Aktuelle News und besondere Momente im Zoo.",
-  items = [
-    {
-      title: "New feeding time",
-      subtitle: "Zweimal täglich live dabei.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-      ctaLabel: "View Page",
-      href: "/news/feeding-time",
-    },
-    {
-      title: "Baby animals",
-      subtitle: "Frischer Nachwuchs im Zoo.",
-      imageSrc:
-        "/Fuchs.png",
-      ctaLabel: "View Page",
-      href: "/news/baby-animals",
-    },
-    {
-      title: "New enclosure",
-      subtitle: "Mehr Platz, bessere Sicht.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1200&q=80",
-      ctaLabel: "View Page",
-      href: "/news/new-enclosure",
-    },
-  ],
+  title,
+  description,
+  items,
   className,
 }: WhatsNewWidgetProps) {
   const navigate = useNavigate()
+  const context = React.useContext(TranslationsContext)
+  if (!context) return null
+
+  const { translations, lang } = context
+  const t = translations.zooWidgets
+  const langKey = lang as keyof typeof t.whatsNew.title
+
+  const resolvedTitle = title ?? t.whatsNew.title[langKey]
+  const resolvedDescription = description ?? t.whatsNew.description[langKey]
+
+  const resolvedItems: WhatsNewItem[] =
+    items ?? [
+      {
+        title: t.whatsNew.items.feedingTime.title[langKey],
+        subtitle: t.whatsNew.items.feedingTime.subtitle[langKey],
+        imageSrc:
+          "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+        ctaLabel: t.whatsNew.items.feedingTime.ctaLabel[langKey],
+        href: "/news/feeding-time",
+      },
+      {
+        title: t.whatsNew.items.babyAnimals.title[langKey],
+        subtitle: t.whatsNew.items.babyAnimals.subtitle[langKey],
+        imageSrc: "/Fuchs.png",
+        ctaLabel: t.whatsNew.items.babyAnimals.ctaLabel[langKey],
+        href: "/news/baby-animals",
+      },
+      {
+        title: t.whatsNew.items.newEnclosure.title[langKey],
+        subtitle: t.whatsNew.items.newEnclosure.subtitle[langKey],
+        imageSrc:
+          "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1200&q=80",
+        ctaLabel: t.whatsNew.items.newEnclosure.ctaLabel[langKey],
+        href: "/news/new-enclosure",
+      },
+    ]
+
   const resolvePath = React.useCallback((path: string) => {
     const segment = window.location.pathname.split("/")[1]
     const isLang = ["de", "en", "fr", "it"].includes(segment)
@@ -246,16 +480,16 @@ export function WhatsNewWidget({
     >
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-semibold text-slate-900">
-          {title}
+          {resolvedTitle}
         </CardTitle>
         <CardDescription className="text-sm text-slate-600">
-          {description}
+          {resolvedDescription}
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <div className="grid grid-cols-3 gap-5">
-          {items.slice(0, 3).map((it) => (
+          {resolvedItems.slice(0, 3).map((it) => (
             <ImageCtaTile
               key={it.title}
               title={it.title}
@@ -287,36 +521,32 @@ type WeatherState = {
   error?: string
 }
 
-const weatherLabels: Record<number, string> = {
-  0: "Klarer Himmel",
-  1: "Überwiegend klar",
-  2: "Teilweise bewölkt",
-  3: "Bewölkt",
-  45: "Nebel",
-  48: "Reifnebel",
-  51: "Leichter Nieselregen",
-  53: "Nieselregen",
-  55: "Starker Nieselregen",
-  61: "Leichter Regen",
-  63: "Regen",
-  65: "Starker Regen",
-  71: "Leichter Schneefall",
-  73: "Schneefall",
-  75: "Starker Schneefall",
-  80: "Regenschauer",
-  81: "Starke Schauer",
-  82: "Heftige Schauer",
-  95: "Gewitter",
+type WeatherTranslations = {
+  locationName: Record<"de" | "en" | "it" | "fr", string>
+  headline: Record<"de" | "en" | "it" | "fr", string>
+  live: Record<"de" | "en" | "it" | "fr", string>
+  loading: Record<"de" | "en" | "it" | "fr", string>
+  unknown: Record<"de" | "en" | "it" | "fr", string>
+  windLabel: Record<"de" | "en" | "it" | "fr", string>
+  stormWarning: Record<"de" | "en" | "it" | "fr", string>
+  calm: Record<"de" | "en" | "it" | "fr", string>
+  errorUnavailable: Record<"de" | "en" | "it" | "fr", string>
+  labels: Record<string, Record<"de" | "en" | "it" | "fr", string>>
 }
 
 export function WeatherWidget({ className }: { className?: string }) {
+  const context = React.useContext(TranslationsContext)
+  if (!context) return null
+
+  const { translations, lang } = context
+  const t = translations.zooWidgets
+  const langKey = lang as keyof WeatherTranslations["headline"]
+
+  const weatherLabels = t.weather.labels as WeatherTranslations["labels"]
+
   const [state, setState] = React.useState<WeatherState>({
     isLoading: true,
   })
-  const isRainy = state.condition?.toLowerCase().includes("regen")
-  const isStorm = state.condition?.toLowerCase().includes("gewitter")
-  const isSnow = state.condition?.toLowerCase().includes("schnee")
-
 
   React.useEffect(() => {
     const fetchWeather = async () => {
@@ -349,23 +579,28 @@ export function WeatherWidget({ className }: { className?: string }) {
             return hour >= 8 && hour <= 17
           })
 
+        const condition =
+          typeof code === "number"
+            ? weatherLabels[String(code)]?.[langKey] ?? undefined
+            : undefined
+
         setState({
           isLoading: false,
           temperature: typeof temp === "number" ? temp : undefined,
           wind: typeof wind === "number" ? wind : undefined,
-          condition: typeof code === "number" ? weatherLabels[code] : undefined,
+          condition,
           hourly,
         })
       } catch (err) {
         setState({
           isLoading: false,
-          error: "Wetterdaten gerade nicht verfügbar.",
+          error: t.weather.errorUnavailable[langKey],
         })
       }
     }
 
     fetchWeather()
-  }, [])
+  }, [langKey, t.weather.errorUnavailable])
 
   return (
     <Card
@@ -378,44 +613,49 @@ export function WeatherWidget({ className }: { className?: string }) {
       <CardHeader className="pb-1">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl font-semibold text-white">Zoo Zürich</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-white">
+              {t.weather.locationName[langKey]}
+            </CardTitle>
             <CardDescription className="text-sm text-white/80">
-              Aktuelle Wetterlage
+              {t.weather.headline[langKey]}
             </CardDescription>
           </div>
           <div className="text-xs uppercase tracking-[0.2em] text-white/70">
-            Live
+            {t.weather.live[langKey]}
           </div>
         </div>
       </CardHeader>
+
       <CardContent className="pt-1">
         {state.isLoading ? (
-          <div className="text-sm text-white/80">Lade Wetterdaten…</div>
+          <div className="text-sm text-white/80">{t.weather.loading[langKey]}</div>
         ) : state.error ? (
           <div className="text-sm text-white/80">{state.error}</div>
         ) : (
           <div className="flex flex-col gap-4">
-          <div className="flex items-start justify-between -mt-2">
+            <div className="flex items-start justify-between -mt-2">
               <div className="text-6xl font-light leading-none text-white">
                 {state.temperature?.toFixed(0)}°
               </div>
               <div className="text-sm text-white/80">
-                {state.condition ?? "Unbekannt"}
+                {state.condition ?? t.weather.unknown[langKey]}
               </div>
             </div>
 
             {state.hourly?.length ? (
               <div className="rounded-2xl border border-white/20 bg-white/10 px-3 py-3">
-                <TemperatureLineChart points={state.hourly} />
+                <TemperatureLineChart points={state.hourly} locale={langKey} />
               </div>
             ) : null}
 
             <div className="flex items-center justify-between text-xs text-white/80">
-              <span>Wind: {state.wind?.toFixed(0)} km/h</span>
+              <span>
+                {t.weather.windLabel[langKey]}: {state.wind?.toFixed(0)} km/h
+              </span>
               {state.wind && state.wind > 30 ? (
-                <span className="text-white">Sturmwarnung</span>
+                <span className="text-white">{t.weather.stormWarning[langKey]}</span>
               ) : (
-                <span className="text-white">Ruhige Bedingungen</span>
+                <span className="text-white">{t.weather.calm[langKey]}</span>
               )}
             </div>
           </div>
@@ -427,8 +667,10 @@ export function WeatherWidget({ className }: { className?: string }) {
 
 function TemperatureLineChart({
   points,
+  locale,
 }: {
   points: { time: string; temp: number }[]
+  locale: "de" | "en" | "it" | "fr"
 }) {
   if (!points.length) return null
 
@@ -451,6 +693,13 @@ function TemperatureLineChart({
     .join(" ")
 
   const yLabels = [Math.round(max), Math.round((max + min) / 2), Math.round(min)]
+
+  const localeMap: Record<typeof locale, string> = {
+    de: "de-CH",
+    en: "en-US",
+    it: "it-IT",
+    fr: "fr-FR",
+  }
 
   return (
     <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>
@@ -505,7 +754,7 @@ function TemperatureLineChart({
           fill="rgba(255,255,255,0.75)"
           fontSize="11"
         >
-          {new Date(p.time).toLocaleTimeString("de-CH", {
+          {new Date(p.time).toLocaleTimeString(localeMap[locale], {
             hour: "2-digit",
             minute: "2-digit",
           })}
@@ -514,6 +763,8 @@ function TemperatureLineChart({
     </svg>
   )
 }
+
+
 
 /** Optional demo layout */
 export function ZooWidgetsDemo() {
