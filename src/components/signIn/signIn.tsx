@@ -18,7 +18,7 @@ import { useAuth } from "@/components/AuthContext";
 import { ToastViewport, useToast } from "@/components/ui/toast";
 import { TranslationsContext } from "../TranslationsContext";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "/api";
 
 function SignIn() {
   const [email, setEmail] = useState("");

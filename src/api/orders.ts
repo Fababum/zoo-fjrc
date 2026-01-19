@@ -17,7 +17,7 @@ type CreateOrderPayload = {
   total: number;
 };
 
-const API_URL = "http://localhost:3000";
+const API_URL = "/api";
 
 export const createOrder = async (
   payload: CreateOrderPayload,

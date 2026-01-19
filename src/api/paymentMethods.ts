@@ -19,7 +19,7 @@ export type PaymentMethod = {
 type CreatePaymentMethodPayload = Omit<PaymentMethod, "id" | "userId">;
 type UpdatePaymentMethodPayload = Partial<CreatePaymentMethodPayload>;
 
-const API_URL = "http://localhost:3000";
+const API_URL = "/api";
 
 export const getPaymentMethods = async (
   token: string
