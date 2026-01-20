@@ -26,7 +26,7 @@ export interface UpdateArtikelDto {
 
 // ==================== API FUNCTIONS ====================
 
-const API_URL = 'http://localhost:3000/artikel';
+const API_URL = '/api/artikel';
 
 // Alle Artikel holen
 export const getAllArtikel = async (): Promise<Artikel[]> => {

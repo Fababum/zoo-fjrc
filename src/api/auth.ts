@@ -18,7 +18,7 @@ export interface AuthResponse {
   };
 }
 
-const API_URL = "http://localhost:3000";
+const API_URL = "/api";
 
 export const register = async (data: RegisterDto): Promise<AuthResponse> => {
   const response = await fetch(`${API_URL}/auth/register`, {
