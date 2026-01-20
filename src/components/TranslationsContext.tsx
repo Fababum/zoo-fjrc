@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import translationsData from "../i18n/translation.json";
+import translationsData from "../i18n/translations.json";
 
 interface TranslationsContextType {
   translations: typeof translationsData;

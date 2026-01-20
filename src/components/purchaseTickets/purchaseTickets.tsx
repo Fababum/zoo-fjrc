@@ -1,102 +1,32 @@
-﻿import React, { useContext, useEffect, useMemo, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthContext";
-import { TranslationsContext } from "../TranslationsContext";
 
 const CART_STORAGE_KEY = "zoo.cart";
-
-type TicketId = "adult" | "youth" | "child";
-type CartItem = { id: TicketId; price: number; qty: number };
-
-const TICKET_CATALOG: Array<{ id: TicketId; price: number; image: string }> = [
-  { id: "adult", price: 32, image: "/Elephant.png" },
-  { id: "youth", price: 26, image: "/Fuchs.png" },
-  { id: "child", price: 17, image: "/ElephantSquare.png" },
-];
 
 function TicketBuyPage() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const context = useContext(TranslationsContext);
-  if (!context) return null;
-
-  const { translations, lang } = context;
-  const t = translations.purchaseTickets;
-  const langKey = lang as keyof typeof t.title;
-
-  const localeMap: Record<typeof langKey, string> = {
-    de: "de-CH",
-    en: "en-US",
-    it: "it-IT",
-    fr: "fr-FR",
-  };
-
-  const currency = translations.common.currency[langKey] ?? "CHF";
-  const formatter = useMemo(
-    () =>
-      new Intl.NumberFormat(localeMap[langKey], {
-        style: "currency",
-        currency,
-      }),
-    [currency, langKey]
-  );
-
-  const formatMoney = (value: number) => formatter.format(value);
-
-  const ticketPriceMap = useMemo(() => {
-    const map = new Map<TicketId, number>();
-    TICKET_CATALOG.forEach((ticket) => map.set(ticket.id, ticket.price));
-    return map;
-  }, []);
-
-  const ticketTitleLookup = useMemo(() => {
-    const lookup: Record<string, TicketId> = {};
-    (Object.keys(t.tickets) as TicketId[]).forEach((id) => {
-      (["de", "en", "fr", "it"] as const).forEach((key) => {
-        lookup[t.tickets[id].title[key].toLowerCase()] = id;
-      });
-    });
-    return lookup;
-  }, [t.tickets]);
-
-  const tickets = useMemo(
-    () =>
-      TICKET_CATALOG.map((ticket) => ({
-        ...ticket,
-        title: t.tickets[ticket.id].title[langKey],
-        description: t.tickets[ticket.id].description[langKey],
-      })),
-    [langKey, t.tickets]
-  );
-
-  const [quantities, setQuantities] = useState<Record<TicketId, number>>(() => {
-    const initial = {} as Record<TicketId, number>;
-    TICKET_CATALOG.forEach((ticket) => {
-      initial[ticket.id] = 1;
+  const [quantities, setQuantities] = useState<Record<string, number>>(() => {
+    const initial: Record<string, number> = {};
+    tickets.forEach((ticket) => {
+      initial[ticket.title] = 1;
     });
     return initial;
   });
-  const [cart, setCart] = useState<CartItem[]>(() => {
+  const [cart, setCart] = useState<Array<{ title: string; price: number; qty: number }>>(() => {
     try {
       const raw = localStorage.getItem(CART_STORAGE_KEY);
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) return [];
-      return parsed.flatMap((item) => {
-        const id =
-          typeof item?.id === "string"
-            ? (item.id as TicketId)
-            : typeof item?.title === "string"
-            ? ticketTitleLookup[item.title.toLowerCase()]
-            : undefined;
-        if (!id || !ticketPriceMap.has(id)) return [];
-        const qty = typeof item?.qty === "number" ? item.qty : 1;
-        const price =
-          typeof item?.price === "number"
-            ? item.price
-            : ticketPriceMap.get(id) ?? 0;
-        return [{ id, price, qty }];
-      });
+      return parsed.filter(
+        (item) =>
+          item &&
+          typeof item.title === "string" &&
+          typeof item.price === "number" &&
+          typeof item.qty === "number"
+      );
     } catch {
       return [];
     }
@@ -104,36 +34,37 @@ function TicketBuyPage() {
   const [showCart, setShowCart] = useState(false);
   const [showLoginNeeded, setShowLoginNeeded] = useState(false);
 
-  const resolvePath = (path: string) => {
-    const segment = window.location.pathname.split("/")[1];
-    const isLang = ["de", "en", "fr", "it"].includes(segment);
-    if (!isLang) return path;
-    return `/${segment}${path.startsWith("/") ? path : `/${path}`}`;
+  const parsePrice = (priceStr: string) => {
+    // parse strings like "CHF 32.-" to number 32
+    const m = priceStr.match(/\d+(?:[.,]\d+)?/);
+    return m ? Number(m[0].replace(",", ".")) : 0;
   };
 
-  const handleAddToCart = (ticketId: TicketId, quantity: number) => {
-    const price = ticketPriceMap.get(ticketId) ?? 0;
+  const handleAddToCart = (title: string, quantity: number) => {
+    const ticket = tickets.find((t) => t.title === title);
+    if (!ticket) return;
+    const price = parsePrice(ticket.price);
+
     setCart((cur) => {
-      const existing = cur.find((c) => c.id === ticketId);
+      const existing = cur.find((c) => c.title === title);
       if (existing) {
-        return cur.map((c) =>
-          c.id === ticketId ? { ...c, qty: c.qty + quantity } : c
-        );
+        return cur.map((c) => (c.title === title ? { ...c, qty: c.qty + quantity } : c));
       }
-      return [...cur, { id: ticketId, price, qty: quantity }];
+      return [...cur, { title, price, qty: quantity }];
     });
+    // open the cart so the user sees the updated contents
     setShowCart(true);
   };
 
-  const handleRemoveFromCart = (ticketId: TicketId) => {
-    setCart((cur) => cur.filter((c) => c.id !== ticketId));
+  const handleRemoveFromCart = (title: string) => {
+    setCart((cur) => cur.filter((c) => c.title !== title));
   };
 
-  const handleUpdateQty = (ticketId: TicketId, delta: number) => {
+  const handleUpdateQty = (title: string, delta: number) => {
     setCart((cur) =>
       cur
         .map((c) =>
-          c.id === ticketId ? { ...c, qty: Math.max(1, c.qty + delta) } : c
+          c.title === title ? { ...c, qty: Math.max(1, c.qty + delta) } : c
         )
         .filter((c) => c.qty > 0)
     );
@@ -154,49 +85,47 @@ function TicketBuyPage() {
     <div style={pageStyle}>
       <div style={contentStyle}>
         <div style={titleWrap}>
-          <div style={kickerStyle}>{translations.common.brand[langKey]}</div>
-          <h1 style={titleStyle}>{t.title[langKey]}</h1>
-          <p style={subtitleStyle}>{t.subtitle[langKey]}</p>
+          <div style={kickerStyle}>ZOO FJRC</div>
+          <h1 style={titleStyle}>Tickets kaufen</h1>
+          <p style={subtitleStyle}>
+            Wähle dein Ticket und lege die gewünschte Anzahl fest.
+          </p>
         </div>
 
-        <img
-          src="/ticket-header.png"
-          alt={t.headerImageAlt[langKey]}
-          style={headerImage}
-        />
+        <img src="/ticket-header.png" alt="Tickets" style={headerImage} />
 
         <div style={cardGrid}>
           {tickets.map((ticket) => (
-            <div key={ticket.id} style={ticketCard}>
+            <div key={ticket.title} style={ticketCard}>
               <div style={ticketImageWrap}>
                 <img src={ticket.image} alt={ticket.title} style={ticketImage} />
               </div>
               <div style={ticketBody}>
                 <div>
                   <div style={ticketTitle}>{ticket.title}</div>
-                  <div style={ticketDesc}>{ticket.description}</div>
+                  <div style={ticketDesc}>{ticket.desc}</div>
                 </div>
                 <div style={ticketMeta}>
-                  <div style={price}>{formatMoney(ticket.price)}</div>
+                  <div style={price}>{ticket.price}</div>
                   <div style={qtyInline}>
                     <button
                       style={pillButton}
                       onClick={() =>
                         setQuantities((prev) => ({
                           ...prev,
-                          [ticket.id]: Math.max(1, (prev[ticket.id] ?? 1) - 1),
+                          [ticket.title]: Math.max(1, (prev[ticket.title] ?? 1) - 1),
                         }))
                       }
                     >
                       -
                     </button>
-                    <div style={qtyDisplay}>{quantities[ticket.id] ?? 1}</div>
+                    <div style={qtyDisplay}>{quantities[ticket.title] ?? 1}</div>
                     <button
                       style={pillButton}
                       onClick={() =>
                         setQuantities((prev) => ({
                           ...prev,
-                          [ticket.id]: (prev[ticket.id] ?? 1) + 1,
+                          [ticket.title]: (prev[ticket.title] ?? 1) + 1,
                         }))
                       }
                     >
@@ -206,10 +135,10 @@ function TicketBuyPage() {
                   <button
                     style={button}
                     onClick={() =>
-                      handleAddToCart(ticket.id, quantities[ticket.id] ?? 1)
+                      handleAddToCart(ticket.title, quantities[ticket.title] ?? 1)
                     }
                   >
-                    {t.buyButton[langKey]}
+                    Ticket kaufen
                   </button>
                 </div>
               </div>
@@ -221,51 +150,47 @@ function TicketBuyPage() {
       {/* Cart button */}
       <div style={cartButtonWrap}>
         <button style={cartButton} onClick={() => setShowCart((s) => !s)}>
-          {t.cartButtonLabel[langKey].replace("{count}", String(cartCount))}
+          Cart ({cartCount})
         </button>
         {showCart && (
           <div style={cartPane} onClick={(e) => e.stopPropagation()}>
-            <h4>{t.cartTitle[langKey]}</h4>
+            <h4>Warenkorb</h4>
             {cart.length === 0 ? (
-              <div>{t.cartEmpty[langKey]}</div>
+              <div>Keine Artikel</div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {cart.map((c) => (
-                  <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                    <div>{t.tickets[c.id].title[langKey]}</div>
+                  <div key={c.title} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                    <div>{c.title}</div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <button style={pillButton} onClick={() => handleUpdateQty(c.id, -1)}>-</button>
+                      <button style={pillButton} onClick={() => handleUpdateQty(c.title, -1)}>-</button>
                       <div style={qtyDisplay}>{c.qty}</div>
-                      <button style={pillButton} onClick={() => handleUpdateQty(c.id, 1)}>+</button>
+                      <button style={pillButton} onClick={() => handleUpdateQty(c.title, 1)}>+</button>
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <div>{formatMoney(c.price * c.qty)}</div>
-                      <button onClick={() => handleRemoveFromCart(c.id)} style={smallButton}>
-                        {t.removeItem[langKey]}
-                      </button>
+                      <div>CHF { (c.price * c.qty).toFixed(2) }</div>
+                      <button onClick={() => handleRemoveFromCart(c.title)} style={smallButton}>Entfernen</button>
                     </div>
                   </div>
                 ))}
                 <div style={{ borderTop: '1px solid #fde68a', paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-                  <div>{t.totalLabel[langKey]}</div>
-                  <div>{formatMoney(cartTotal)}</div>
+                  <div>Summe</div>
+                  <div>CHF {cartTotal.toFixed(2)}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 8 }}>
-                  <button style={ghostButton} onClick={() => setShowCart(false)}>
-                    {t.continueShopping[langKey]}
-                  </button>
+                  <button style={ghostButton} onClick={() => setShowCart(false)}>Weiter einkaufen</button>
                   <button
                     style={button}
                     onClick={() => {
                       if (auth.isLoggedIn) {
-                        navigate(resolvePath('/purchase-card'), { state: { cart, total: cartTotal } });
+                        navigate('/purchase-card', { state: { cart, total: cartTotal } });
                       } else {
                         // show login-needed prompt; user can proceed to sign-in which receives cart state
                         setShowLoginNeeded(true);
                       }
                     }}
                   >
-                    {t.checkout[langKey]}
+                    Buy
                   </button>
                 </div>
               </div>
@@ -277,22 +202,11 @@ function TicketBuyPage() {
       {showLoginNeeded && (
         <div style={modalOverlay} onClick={() => setShowLoginNeeded(false)}>
           <div style={modal} onClick={(e) => e.stopPropagation()}>
-            <h3>{t.loginRequiredTitle[langKey]}</h3>
-            <p>{t.loginRequiredBody[langKey]}</p>
+            <h3>Login erforderlich</h3>
+            <p>Bitte logge dich ein, um den Einkauf abzuschliessen.</p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
-              <button style={ghostButton} onClick={() => setShowLoginNeeded(false)}>
-                {t.cancel[langKey]}
-              </button>
-              <button
-                style={button}
-                onClick={() =>
-                  navigate(resolvePath('/signIn'), {
-                    state: { from: '/purchase-card', cart, total: cartTotal },
-                  })
-                }
-              >
-                {t.goToLogin[langKey]}
-              </button>
+              <button style={ghostButton} onClick={() => setShowLoginNeeded(false)}>Abbrechen</button>
+              <button style={button} onClick={() => navigate('/signIn', { state: { from: '/purchase-card', cart, total: cartTotal } })}>Zum Login</button>
             </div>
           </div>
         </div>
@@ -300,6 +214,29 @@ function TicketBuyPage() {
     </div>
   );
 }
+
+
+const tickets = [
+  {
+    title: "Erwachsene",
+    desc: "ab 18 Jahren",
+    price: "CHF 32.-",
+    image: "/Elephant.png",
+  },
+  {
+    title: "Jugendliche",
+    desc: "13-17 Jahre",
+    price: "CHF 26.-",
+    image: "/Fuchs.png",
+  },
+  {
+    title: "Kinder",
+    desc: "6-12 Jahre",
+    price: "CHF 17.-",
+    image: "/ElephantSquare.png",
+  }
+];
+
 const pageStyle: React.CSSProperties = {
   minHeight: "100vh",
   backgroundImage:
@@ -526,5 +463,3 @@ const qtyInline: React.CSSProperties = {
 };
 
 export default TicketBuyPage;
-
-

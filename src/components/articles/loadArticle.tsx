@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getArtikelById, updateArtikel, deleteArtikel } from "../../api/artikel";
 import { Button } from "../ui/button";
 import { Edit, Trash2, X, Save, ArrowLeft } from "lucide-react";
-import { TranslationsContext } from "../TranslationsContext";
 
 import "./loadArticle.css";
 import "github-markdown-css/github-markdown.css";
@@ -13,12 +12,6 @@ import "github-markdown-css/github-markdown.css";
 export default function LoadArticle() {
   const { article } = useParams<{ article?: string }>();
   const navigate = useNavigate();
-  const context = useContext(TranslationsContext);
-  if (!context) return null;
-
-  const { translations, lang } = context;
-  const t = translations.articleDetails;
-  const langKey = lang as keyof typeof t.loading;
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +32,7 @@ export default function LoadArticle() {
         setError(null);
       } catch (err) {
         console.error('Error loading article:', err);
-        setError(t.errorLoading[langKey]);
+        setError('Artikel konnte nicht geladen werden.');
         setContent('');
       } finally {
         setLoading(false);
@@ -66,7 +59,7 @@ export default function LoadArticle() {
       setIsEditing(false);
     } catch (err) {
       console.error('Error updating article:', err);
-      alert(t.saveError[langKey]);
+      alert('Fehler beim Speichern des Artikels');
     } finally {
       setSaving(false);
     }
@@ -75,7 +68,7 @@ export default function LoadArticle() {
   const handleDelete = async () => {
     if (!article) return;
     
-    if (!confirm(t.deleteConfirm[langKey])) {
+    if (!confirm('Möchten Sie diesen Artikel wirklich löschen?')) {
       return;
     }
 
@@ -86,7 +79,7 @@ export default function LoadArticle() {
       navigate(`/${currentLang}/articles`);
     } catch (err) {
       console.error('Error deleting article:', err);
-      alert(t.deleteError[langKey]);
+      alert('Fehler beim Löschen des Artikels');
     }
   };
 
@@ -107,7 +100,7 @@ export default function LoadArticle() {
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white py-12 px-4 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mx-auto"></div>
-          <p className="mt-4 text-slate-600">{t.loading[langKey]}</p>
+          <p className="mt-4 text-slate-600">Artikel wird geladen...</p>
         </div>
       </div>
     );
@@ -144,7 +137,7 @@ export default function LoadArticle() {
               size="lg"
             >
               <Edit className="h-5 w-5" />
-              {t.edit[langKey]}
+              Bearbeiten
             </Button>
             <Button
               onClick={handleDelete}
@@ -152,7 +145,7 @@ export default function LoadArticle() {
               size="lg"
             >
               <Trash2 className="h-5 w-5" />
-              {t.delete[langKey]}
+              Löschen
             </Button>
           </>
         ) : (
@@ -164,7 +157,7 @@ export default function LoadArticle() {
               size="lg"
             >
               <Save className="h-5 w-5" />
-              {saving ? t.saving[langKey] : t.save[langKey]}
+              {saving ? 'Speichert...' : 'Speichern'}
             </Button>
             <Button
               onClick={handleCancel}
@@ -173,7 +166,7 @@ export default function LoadArticle() {
               size="lg"
             >
               <X className="h-5 w-5" />
-              {t.cancel[langKey]}
+              Abbrechen
             </Button>
           </>
         )}
@@ -183,7 +176,7 @@ export default function LoadArticle() {
         {isEditing ? (
           <div className="bg-white/80 border border-amber-100/70 rounded-lg shadow-2xl backdrop-blur p-8">
             <h2 className="text-2xl font-semibold mb-4 text-slate-900">
-              {t.editTitle[langKey]}
+              Artikel bearbeiten
             </h2>
             <textarea
               value={editContent}
@@ -236,7 +229,7 @@ export default function LoadArticle() {
             size="lg"
           >
             <ArrowLeft className="h-5 w-5" />
-            {t.backToOverview[langKey]}
+            Zurück zur Übersicht
           </Button>
         </div>
       </div>

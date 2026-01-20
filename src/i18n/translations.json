@@ -1,0 +1,763 @@
+{
+  "signUp": {
+    "title": {
+      "de": "Konto erstellen",
+      "en": "Create your account",
+      "it": "Crea il tuo account",
+      "fr": "Créez votre compte"
+    },
+    "description": {
+      "de": "Geben Sie unten Ihre E-Mail-Adresse ein, um ein Konto zu erstellen",
+      "en": "Enter your email below to create your account",
+      "it": "Inserisci la tua email per creare un account",
+      "fr": "Entrez votre e-mail ci-dessous pour créer un compte"
+    },
+    "email": {
+      "de": "E-Mail",
+      "en": "Email",
+      "it": "Email",
+      "fr": "E-mail"
+    },
+    "name": {
+      "de": "Name",
+      "en": "Name",
+      "it": "Nome",
+      "fr": "Nom"
+    },
+    "namePlaceholder": {
+      "de": "Max Mustermann",
+      "en": "John Doe",
+      "it": "Mario Rossi",
+      "fr": "Jean Dupont"
+    },
+    "password": {
+      "de": "Passwort",
+      "en": "Password",
+      "it": "Password",
+      "fr": "Mot de passe"
+    },
+    "confirmPassword": {
+      "de": "Passwort bestätigen",
+      "en": "Confirm Password",
+      "it": "Conferma password",
+      "fr": "Confirmer le mot de passe"
+    },
+    "createAccount": {
+      "de": "Konto erstellen",
+      "en": "Create Account",
+      "it": "Crea account",
+      "fr": "Créer un compte"
+    },
+    "signIn": {
+      "de": "Anmelden",
+      "en": "Sign In",
+      "it": "Accedi",
+      "fr": "Se connecter"
+    },
+    "googleLogin": {
+      "de": "Mit Google anmelden",
+      "en": "Login with Google",
+      "it": "Accedi con Google",
+      "fr": "Se connecter avec Google"
+    },
+    "passwordMismatch": {
+      "de": "Passwörter stimmen nicht überein!",
+      "en": "Passwords do not match!",
+      "it": "Le password non coincidono!",
+      "fr": "Les mots de passe ne correspondent pas !"
+    },
+    "emailPlaceholder": {
+      "de": "m@beispiel.de",
+      "en": "m@example.com",
+      "it": "m@esempio.com",
+      "fr": "m@exemple.com"
+    },
+    "alreadyHaveAccount": {
+      "de": "Hast du schon ein Account?",
+      "en": "Already have an account?",
+      "it": "Hai già un account?",
+      "fr": "Vous avez déjà un compte ?"
+    }
+  },
+  "signIn": {
+    "title": {
+      "de": "Anmeldung zu deinem Konto",
+      "en": "Login to your account",
+      "it": "Accedi al tuo account",
+      "fr": "Connectez-vous à votre compte"
+    },
+    "description": {
+      "de": "Geben Sie unten Ihre E-Mail-Adresse ein, um sich anzumelden",
+      "en": "Enter your email below to login",
+      "it": "Inserisci la tua email per accedere",
+      "fr": "Entrez votre e-mail ci-dessous pour vous connecter"
+    },
+    "email": {
+      "de": "E-Mail",
+      "en": "Email",
+      "it": "Email",
+      "fr": "E-mail"
+    },
+    "emailPlaceholder": {
+      "de": "m@beispiel.de",
+      "en": "m@example.com",
+      "it": "m@esempio.com",
+      "fr": "m@exemple.com"
+    },
+    "password": {
+      "de": "Passwort",
+      "en": "Password",
+      "it": "Password",
+      "fr": "Mot de passe"
+    },
+    "loginButton": {
+      "de": "Anmelden",
+      "en": "Login",
+      "it": "Accedi",
+      "fr": "Se connecter"
+    },
+    "signUpButton": {
+      "de": "Registrieren",
+      "en": "Sign Up",
+      "it": "Registrati",
+      "fr": "S'inscrire"
+    },
+    "googleLogin": {
+      "de": "Mit Google anmelden",
+      "en": "Login with Google",
+      "it": "Accedi con Google",
+      "fr": "Se connecter avec Google"
+    },
+    "noAccountYet": {
+      "de": "Noch keinen Account?",
+      "en": "Don't have an account yet?",
+      "it": "Non hai ancora un account?",
+      "fr": "Pas encore de compte ?"
+    }
+  },
+  "signUpConfirmation": {
+    "title": {
+      "de": "Danke fürs Anmelden",
+      "en": "Thank you for signing up",
+      "it": "Grazie per la registrazione",
+      "fr": "Merci pour votre inscription"
+    },
+    "continue": {
+      "de": "weiter",
+      "en": "continue",
+      "it": "continua",
+      "fr": "continuer"
+    }
+  },
+  "chatbot": {
+    "title": {
+      "de": "Zoo-Chatbot",
+      "en": "Zoo Chatbot",
+      "it": "Chatbot dello Zoo",
+      "fr": "Chatbot du Zoo"
+    },
+    "subtitle": {
+      "de": "Frag mich alles über unsere Tiere!",
+      "en": "Ask me anything about our animals!",
+      "it": "Chiedimi qualsiasi cosa sui nostri animali!",
+      "fr": "Demandez-moi tout sur nos animaux !"
+    },
+    "chatAssistant": {
+      "de": "Chat-Assistent",
+      "en": "Chat Assistant",
+      "it": "Assistente Chat",
+      "fr": "Assistant de Chat"
+    },
+    "placeholder": {
+      "de": "Stelle eine Frage über Elefanten oder Füchse...",
+      "en": "Ask a question about elephants or foxes...",
+      "it": "Fai una domanda sugli elefanti o le volpi...",
+      "fr": "Posez une question sur les éléphants ou les renards..."
+    },
+    "tip": {
+      "de": "Tipp: Du kannst nach Informationen über Elefanten und Füchse fragen!",
+      "en": "Tip: You can ask for information about elephants and foxes!",
+      "it": "Suggerimento: Puoi chiedere informazioni sugli elefanti e le volpi!",
+      "fr": "Astuce : Vous pouvez demander des informations sur les éléphants et les renards !"
+    },
+    "initialMessage": {
+      "de": "Hallo! Ich bin dein Zoo-Assistent. Ich kann dir Fragen über Elefanten und Füchse beantworten. Was möchtest du wissen?",
+      "en": "Hello! I'm your zoo assistant. I can answer questions about elephants and foxes. What would you like to know?",
+      "it": "Ciao! Sono il tuo assistente dello zoo. Posso rispondere a domande su elefanti e volpi. Cosa vorresti sapere?",
+      "fr": "Bonjour ! Je suis votre assistant du zoo. Je peux répondre aux questions sur les éléphants et les renards. Que voulez-vous savoir ?"
+    },
+    "errorApiKey": {
+      "de": "Gemini API Key nicht konfiguriert. Bitte setze VITE_GEMINI_API_KEY in deiner .env Datei.",
+      "en": "Gemini API Key not configured. Please set VITE_GEMINI_API_KEY in your .env file.",
+      "it": "Chiave API Gemini non configurata. Imposta VITE_GEMINI_API_KEY nel tuo file .env.",
+      "fr": "Clé API Gemini non configurée. Veuillez définir VITE_GEMINI_API_KEY dans votre fichier .env."
+    },
+    "errorConnection": {
+      "de": "Es gab einen Fehler bei der Verbindung zum Chat-Service. Bitte versuche es später erneut.",
+      "en": "There was an error connecting to the chat service. Please try again later.",
+      "it": "Si è verificato un errore durante la connessione al servizio di chat. Riprova più tardi.",
+      "fr": "Une erreur s'est produite lors de la connexion au service de chat. Veuillez réessayer plus tard."
+    },
+    "noResponse": {
+      "de": "Keine Antwort erhalten.",
+      "en": "No response received.",
+      "it": "Nessuna risposta ricevuta.",
+      "fr": "Aucune réponse reçue."
+    },
+    "systemPrompt": {
+      "de": "Du bist ein hilfreicher Zoo-Assistent. Antworte auf Deutsch und basiere deine Antworten auf dem folgenden Kontext über Tiere im Zoo:\n\n{context}\n\nWenn du nach Informationen gefragt wirst, die nicht in diesem Kontext enthalten sind, sage freundlich, dass du nur über Elefanten und Füchse aus unserem Zoo Auskunft geben kannst.\n\nFrage: {question}",
+      "en": "You are a helpful zoo assistant. Answer in English and base your answers on the following context about animals in the zoo:\n\n{context}\n\nIf you are asked for information that is not contained in this context, politely say that you can only provide information about elephants and foxes from our zoo.\n\nQuestion: {question}",
+      "it": "Sei un assistente utile dello zoo. Rispondi in italiano e basa le tue risposte sul seguente contesto sugli animali dello zoo:\n\n{context}\n\nSe ti vengono chieste informazioni che non sono contenute in questo contesto, di' gentilmente che puoi fornire solo informazioni sugli elefanti e le volpi del nostro zoo.\n\nDomanda: {question}",
+      "fr": "Vous êtes un assistant utile du zoo. Répondez en français et basez vos réponses sur le contexte suivant sur les animaux du zoo :\n\n{context}\n\nSi on vous demande des informations qui ne sont pas contenues dans ce contexte, dites poliment que vous ne pouvez fournir que des informations sur les éléphants et les renards de notre zoo.\n\nQuestion: {question}"
+    }
+  },
+  "zooWidgets": {
+    "visitPlanner": {
+      "title": {
+        "de": "Zoobesuch planen",
+        "en": "Plan your visit",
+        "it": "Pianifica la visita",
+        "fr": "Planifier votre visite"
+      },
+      "description": {
+        "de": "Tickets, Anreise und Zeiten auf einen Blick.",
+        "en": "Tickets, directions and opening times at a glance.",
+        "it": "Biglietti, percorso e orari in un colpo d’occhio.",
+        "fr": "Billets, itinéraire et horaires en un coup d’œil."
+      },
+      "actions": {
+        "tickets": {
+          "title": {
+            "de": "Tickets kaufen",
+            "en": "Buy tickets",
+            "it": "Acquista biglietti",
+            "fr": "Acheter des billets"
+          },
+          "subtitle": {
+            "de": "Online buchen und Zeit sparen.",
+            "en": "Book online and save time.",
+            "it": "Prenota online e risparmia tempo.",
+            "fr": "Réservez en ligne et gagnez du temps."
+          },
+          "ctaLabel": {
+            "de": "Tickets kaufen",
+            "en": "Buy tickets",
+            "it": "Acquista biglietti",
+            "fr": "Acheter des billets"
+          }
+        },
+        "directions": {
+          "title": {
+            "de": "Anreise planen",
+            "en": "Plan directions",
+            "it": "Pianifica il percorso",
+            "fr": "Planifier l’itinéraire"
+          },
+          "subtitle": {
+            "de": "So findest du den schnellsten Weg.",
+            "en": "Find the fastest way to get here.",
+            "it": "Trova il modo più veloce per arrivare.",
+            "fr": "Trouvez le chemin le plus rapide."
+          },
+          "ctaLabel": {
+            "de": "Anreise planen",
+            "en": "Plan directions",
+            "it": "Pianifica il percorso",
+            "fr": "Planifier l’itinéraire"
+          }
+        }
+      }
+    },
+    "whatsNew": {
+      "title": {
+        "de": "Was gibt’s Neues?",
+        "en": "What’s new?",
+        "it": "Novità",
+        "fr": "Quoi de neuf ?"
+      },
+      "description": {
+        "de": "Aktuelle News und besondere Momente im Zoo.",
+        "en": "Latest news and special moments at the zoo.",
+        "it": "Notizie e momenti speciali allo zoo.",
+        "fr": "Actualités et moments spéciaux au zoo."
+      },
+      "items": {
+        "feedingTime": {
+          "title": {
+            "de": "Neue Fütterungszeiten",
+            "en": "New feeding time",
+            "it": "Nuovi orari di alimentazione",
+            "fr": "Nouveaux horaires de nourrissage"
+          },
+          "subtitle": {
+            "de": "Zweimal täglich live dabei.",
+            "en": "Join live twice a day.",
+            "it": "Dal vivo due volte al giorno.",
+            "fr": "En direct deux fois par jour."
+          },
+          "ctaLabel": {
+            "de": "Seite ansehen",
+            "en": "View page",
+            "it": "Vedi pagina",
+            "fr": "Voir la page"
+          }
+        },
+        "babyAnimals": {
+          "title": {
+            "de": "Babytier-News",
+            "en": "Baby animals",
+            "it": "Cuccioli",
+            "fr": "Bébés animaux"
+          },
+          "subtitle": {
+            "de": "Frischer Nachwuchs im Zoo.",
+            "en": "New arrivals at the zoo.",
+            "it": "Nuovi nati allo zoo.",
+            "fr": "De nouvelles naissances au zoo."
+          },
+          "ctaLabel": {
+            "de": "Seite ansehen",
+            "en": "View page",
+            "it": "Vedi pagina",
+            "fr": "Voir la page"
+          }
+        },
+        "newEnclosure": {
+          "title": {
+            "de": "Neues Gehege",
+            "en": "New enclosure",
+            "it": "Nuovo recinto",
+            "fr": "Nouvel enclos"
+          },
+          "subtitle": {
+            "de": "Mehr Platz, bessere Sicht.",
+            "en": "More space, better views.",
+            "it": "Più spazio, vista migliore.",
+            "fr": "Plus d’espace, meilleure visibilité."
+          },
+          "ctaLabel": {
+            "de": "Seite ansehen",
+            "en": "View page",
+            "it": "Vedi pagina",
+            "fr": "Voir la page"
+          }
+        }
+      }
+    },
+    "weather": {
+      "locationName": {
+        "de": "Zoo Zürich",
+        "en": "Zurich Zoo",
+        "it": "Zoo di Zurigo",
+        "fr": "Zoo de Zurich"
+      },
+      "headline": {
+        "de": "Aktuelle Wetterlage",
+        "en": "Current weather",
+        "it": "Meteo attuale",
+        "fr": "Météo actuelle"
+      },
+      "live": {
+        "de": "Live",
+        "en": "Live",
+        "it": "Live",
+        "fr": "Live"
+      },
+      "loading": {
+        "de": "Lade Wetterdaten…",
+        "en": "Loading weather…",
+        "it": "Caricamento meteo…",
+        "fr": "Chargement météo…"
+      },
+      "unknown": {
+        "de": "Unbekannt",
+        "en": "Unknown",
+        "it": "Sconosciuto",
+        "fr": "Inconnu"
+      },
+      "windLabel": {
+        "de": "Wind",
+        "en": "Wind",
+        "it": "Vento",
+        "fr": "Vent"
+      },
+      "stormWarning": {
+        "de": "Sturmwarnung",
+        "en": "Storm warning",
+        "it": "Allerta tempesta",
+        "fr": "Alerte tempête"
+      },
+      "calm": {
+        "de": "Ruhige Bedingungen",
+        "en": "Calm conditions",
+        "it": "Condizioni tranquille",
+        "fr": "Conditions calmes"
+      },
+      "errorUnavailable": {
+        "de": "Wetterdaten gerade nicht verfügbar.",
+        "en": "Weather data is currently unavailable.",
+        "it": "Dati meteo non disponibili al momento.",
+        "fr": "Données météo indisponibles pour le moment."
+      },
+      "labels": {
+        "0": { "de": "Klarer Himmel", "en": "Clear sky", "it": "Cielo sereno", "fr": "Ciel dégagé" },
+        "1": { "de": "Überwiegend klar", "en": "Mainly clear", "it": "Prevalentemente sereno", "fr": "Principalement dégagé" },
+        "2": { "de": "Teilweise bewölkt", "en": "Partly cloudy", "it": "Parzialmente nuvoloso", "fr": "Partiellement nuageux" },
+        "3": { "de": "Bewölkt", "en": "Overcast", "it": "Coperto", "fr": "Couvert" },
+        "45": { "de": "Nebel", "en": "Fog", "it": "Nebbia", "fr": "Brouillard" },
+        "48": { "de": "Reifnebel", "en": "Depositing rime fog", "it": "Nebbia con brina", "fr": "Brouillard givrant" },
+        "51": { "de": "Leichter Nieselregen", "en": "Light drizzle", "it": "Pioviggine leggera", "fr": "Bruine légère" },
+        "53": { "de": "Nieselregen", "en": "Drizzle", "it": "Pioviggine", "fr": "Bruine" },
+        "55": { "de": "Starker Nieselregen", "en": "Dense drizzle", "it": "Pioviggine intensa", "fr": "Bruine dense" },
+        "61": { "de": "Leichter Regen", "en": "Slight rain", "it": "Pioggia leggera", "fr": "Pluie faible" },
+        "63": { "de": "Regen", "en": "Rain", "it": "Pioggia", "fr": "Pluie" },
+        "65": { "de": "Starker Regen", "en": "Heavy rain", "it": "Pioggia forte", "fr": "Forte pluie" },
+        "71": { "de": "Leichter Schneefall", "en": "Slight snowfall", "it": "Neve leggera", "fr": "Faibles chutes de neige" },
+        "73": { "de": "Schneefall", "en": "Snowfall", "it": "Nevicata", "fr": "Chutes de neige" },
+        "75": { "de": "Starker Schneefall", "en": "Heavy snowfall", "it": "Forte nevicata", "fr": "Fortes chutes de neige" },
+        "80": { "de": "Regenschauer", "en": "Rain showers", "it": "Rovesci di pioggia", "fr": "Averses de pluie" },
+        "81": { "de": "Starke Schauer", "en": "Heavy rain showers", "it": "Rovesci forti", "fr": "Fortes averses" },
+        "82": { "de": "Heftige Schauer", "en": "Violent rain showers", "it": "Rovesci violenti", "fr": "Averses violentes" },
+        "95": { "de": "Gewitter", "en": "Thunderstorm", "it": "Temporale", "fr": "Orage" }
+      }
+    },
+    "dailySchedule": {
+      "title": {
+        "de": "Tagesplan",
+        "en": "Daily schedule",
+        "it": "Programma giornaliero",
+        "fr": "Programme du jour"
+      },
+      "description": {
+        "de": "Alle Programmpunkte in 30-Minuten-Slots. Es können mehrere Events pro Slot stattfinden.",
+        "en": "All activities in 30-minute slots. Multiple events can happen per slot.",
+        "it": "Tutte le attività in slot da 30 minuti. Più eventi possono svolgersi nello stesso slot.",
+        "fr": "Toutes les activités par créneaux de 30 minutes. Plusieurs événements peuvent avoir lieu par créneau."
+      },
+      "noEvents": {
+        "de": "Keine Events in diesem Zeitraum.",
+        "en": "No events in this time slot.",
+        "it": "Nessun evento in questo intervallo.",
+        "fr": "Aucun événement sur ce créneau."
+      },
+      "locationLabel": {
+        "de": "Ort",
+        "en": "Location",
+        "it": "Luogo",
+        "fr": "Lieu"
+      },
+      "timeWindowLabel": {
+        "de": "Zeitraum",
+        "en": "Time window",
+        "it": "Intervallo",
+        "fr": "Plage horaire"
+      },
+      "slotSizeLabel": {
+        "de": "Slot",
+        "en": "Slot",
+        "it": "Slot",
+        "fr": "Créneau"
+      },
+      "minutes": {
+        "de": "Minuten",
+        "en": "minutes",
+        "it": "minuti",
+        "fr": "minutes"
+      },
+      "events": {
+        "gatesOpen": {
+          "de": "Einlass & Zoo öffnet",
+          "en": "Gates open",
+          "it": "Apertura ingressi",
+          "fr": "Ouverture des portes"
+        },
+        "gatesClose": {
+          "de": "Zoo schließt",
+          "en": "Zoo closes",
+          "it": "Chiusura zoo",
+          "fr": "Fermeture du zoo"
+        },
+        "feedingSavannah": {
+          "de": "Fütterung in der Savanne",
+          "en": "Feeding time in the savannah",
+          "it": "Alimentazione nella savana",
+          "fr": "Nourrissage en savane"
+        },
+        "foxTalk": {
+          "de": "Kurz-Info: Füchse",
+          "en": "Quick talk: foxes",
+          "it": "Mini talk: volpi",
+          "fr": "Mini-info : renards"
+        },
+        "keeperTalk": {
+          "de": "Tierpfleger-Talk",
+          "en": "Keeper talk",
+          "it": "Talk con i custodi",
+          "fr": "Présentation du soigneur"
+        },
+        "behindScenes": {
+          "de": "Behind the Scenes (Treffpunkt)",
+          "en": "Behind the scenes (meeting point)",
+          "it": "Dietro le quinte (punto d’incontro)",
+          "fr": "Coulisses (point de rendez-vous)"
+        },
+        "kidsQuiz": {
+          "de": "Kinder-Quiz",
+          "en": "Kids quiz",
+          "it": "Quiz per bambini",
+          "fr": "Quiz pour enfants"
+        }
+      },
+      "locations": {
+        "mainEntrance": {
+          "de": "Haupteingang",
+          "en": "Main entrance",
+          "it": "Ingresso principale",
+          "fr": "Entrée principale"
+        },
+        "savannahArea": {
+          "de": "Savannenbereich",
+          "en": "Savannah area",
+          "it": "Area savana",
+          "fr": "Zone savane"
+        },
+        "foxEnclosure": {
+          "de": "Fuchsgehege",
+          "en": "Fox enclosure",
+          "it": "Recinto delle volpi",
+          "fr": "Enclos des renards"
+        },
+        "elephantHouse": {
+          "de": "Elefantenhaus",
+          "en": "Elephant house",
+          "it": "Casa degli elefanti",
+          "fr": "Maison des éléphants"
+        },
+        "meetingPoint": {
+          "de": "Treffpunkt",
+          "en": "Meeting point",
+          "it": "Punto d’incontro",
+          "fr": "Point de rendez-vous"
+        },
+        "educationCorner": {
+          "de": "Info-Ecke",
+          "en": "Education corner",
+          "it": "Angolo educativo",
+          "fr": "Espace pédagogique"
+        }
+      }
+    }
+  },
+  "homepage": {
+    "kicker": {
+      "de": "ZOO FJRC",
+      "en": "ZOO FJRC",
+      "it": "ZOO FJRC",
+      "fr": "ZOO FJRC"
+    },
+    "title": {
+      "de": "Willkommen im Zoo",
+      "en": "Welcome to the Zoo",
+      "it": "Benvenuto allo zoo",
+      "fr": "Bienvenue au zoo"
+    },
+    "subtitle": {
+      "de": "Plane deinen Besuch und entdecke die neuesten Highlights.",
+      "en": "Plan your visit and discover the latest highlights.",
+      "it": "Pianifica la visita e scopri le ultime novità.",
+      "fr": "Planifiez votre visite et découvrez les dernières nouveautés."
+    }
+  },
+  "newsArticlePage": {
+    "ui": {
+      "newsLabel": { "de": "News", "en": "News", "it": "News", "fr": "Actualités" },
+      "highlightsLabel": { "de": "Highlights", "en": "Highlights", "it": "Punti forti", "fr": "Temps forts" },
+      "tipLabel": { "de": "Tipp", "en": "Tip", "it": "Consiglio", "fr": "Astuce" },
+      "backHome": { "de": "Zur Homepage", "en": "Back to homepage", "it": "Torna alla homepage", "fr": "Retour à l’accueil" },
+      "notFoundTitle": { "de": "Artikel nicht gefunden", "en": "Article not found", "it": "Articolo non trovato", "fr": "Article introuvable" },
+      "notFoundSubtitle": { "de": "Bitte prüfe den Link.", "en": "Please check the link.", "it": "Controlla il link.", "fr": "Veuillez vérifier le lien." },
+      "defaultTip": {
+        "de": "Plane deinen Besuch mit genug Zeit für die jeweiligen Bereiche – die Wege sind weit, aber lohnen sich.",
+        "en": "Plan enough time for each area — the paths are long, but worth it.",
+        "it": "Pianifica abbastanza tempo per ogni area: i percorsi sono lunghi, ma ne vale la pena.",
+        "fr": "Prévoyez suffisamment de temps pour chaque zone : les chemins sont longs, mais ça vaut le coup."
+      }
+    },
+    "articles": {
+      "feeding-time": {
+        "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80",
+        "title": {
+          "de": "Neue Fütterungszeiten",
+          "en": "New feeding time",
+          "it": "Nuovi orari di alimentazione",
+          "fr": "Nouveaux horaires de nourrissage"
+        },
+        "subtitle": {
+          "de": "Mehr Nähe zu den Tieren – täglich live dabei.",
+          "en": "Get closer to the animals — live every day.",
+          "it": "Più vicini agli animali — dal vivo ogni giorno.",
+          "fr": "Plus près des animaux — en direct chaque jour."
+        },
+        "body": {
+          "de": [
+            "Ab sofort finden die Fütterungen im Savannenbereich zweimal täglich statt – perfekt, um die Tiere aktiv zu erleben.",
+            "Beste Zeiten: 10:30 Uhr und 15:30 Uhr. Bitte bleib hinter den Markierungen und halte Abstand.",
+            "Unser Team erklärt kurz, was die Tiere fressen und warum bestimmte Futterarten wichtig sind."
+          ],
+          "en": [
+            "From now on, feedings in the savannah area take place twice a day — perfect to see the animals active.",
+            "Best times: 10:30 and 15:30. Please stay behind the markings and keep your distance.",
+            "Our team will briefly explain what the animals eat and why certain foods matter."
+          ],
+          "it": [
+            "Da ora le sessioni di alimentazione nell’area della savana si svolgono due volte al giorno — perfette per vedere gli animali in attività.",
+            "Orari migliori: 10:30 e 15:30. Rimani dietro le indicazioni e mantieni la distanza.",
+            "Il nostro team spiega brevemente cosa mangiano gli animali e perché alcuni alimenti sono importanti."
+          ],
+          "fr": [
+            "Désormais, les nourrissages dans la zone savane ont lieu deux fois par jour — idéal pour voir les animaux en action.",
+            "Meilleurs horaires : 10h30 et 15h30. Merci de rester derrière les marquages et de garder vos distances.",
+            "Notre équipe explique brièvement ce que mangent les animaux et pourquoi certains aliments sont importants."
+          ]
+        },
+        "highlights": {
+          "de": ["10:30 & 15:30 Uhr", "Savannenbereich", "Kurzinfos vom Team"],
+          "en": ["10:30 & 15:30", "Savannah area", "Quick info by staff"],
+          "it": ["10:30 e 15:30", "Area savana", "Info rapide dal team"],
+          "fr": ["10h30 & 15h30", "Zone savane", "Infos rapides par l’équipe"]
+        },
+        "tip": {
+          "de": "Komm 10–15 Minuten früher, so bekommst du einen guten Platz.",
+          "en": "Arrive 10–15 minutes early to get a good spot.",
+          "it": "Arriva 10–15 minuti prima per trovare un buon posto.",
+          "fr": "Venez 10 à 15 minutes en avance pour avoir une bonne place."
+        }
+      },
+      "baby-animals": {
+        "image": "/Fuchs.png",
+        "title": {
+          "de": "Nachwuchs im Zoo",
+          "en": "Baby animals",
+          "it": "Cuccioli allo zoo",
+          "fr": "Bébés animaux au zoo"
+        },
+        "subtitle": {
+          "de": "Frischer Nachwuchs – sanfte Momente im Alltag.",
+          "en": "New arrivals — gentle moments every day.",
+          "it": "Nuovi nati — momenti teneri ogni giorno.",
+          "fr": "De nouvelles naissances — des moments tout en douceur."
+        },
+        "body": {
+          "de": [
+            "In den letzten Wochen gab es Nachwuchs bei den Erdmännchen und Giraffen.",
+            "Die Jungtiere sind besonders vormittags aktiv und bleiben gerne in der Nähe ihrer Mutter.",
+            "Bitte sei besonders ruhig – die Kleinen reagieren sensibel auf laute Geräusche."
+          ],
+          "en": [
+            "In recent weeks, there have been new births among meerkats and giraffes.",
+            "The young animals are especially active in the morning and like to stay close to their mother.",
+            "Please be extra quiet — the little ones are sensitive to loud noises."
+          ],
+          "it": [
+            "Nelle ultime settimane sono nati piccoli tra suricati e giraffe.",
+            "I cuccioli sono particolarmente attivi al mattino e restano volentieri vicino alla madre.",
+            "Per favore, sii molto silenzioso: i piccoli sono sensibili ai rumori forti."
+          ],
+          "fr": [
+            "Ces dernières semaines, il y a eu des naissances chez les suricates et les girafes.",
+            "Les petits sont particulièrement actifs le matin et restent volontiers près de leur mère.",
+            "Merci de rester très calme : les petits sont sensibles aux bruits forts."
+          ]
+        },
+        "highlights": {
+          "de": ["Vormittags aktiv", "Ruhige Beobachtung", "Mehrere Gehege"],
+          "en": ["Active in the morning", "Quiet observation", "Multiple enclosures"],
+          "it": ["Attivi al mattino", "Osservazione tranquilla", "Più recinti"],
+          "fr": ["Actifs le matin", "Observation calme", "Plusieurs enclos"]
+        },
+        "tip": {
+          "de": "Leise bleiben lohnt sich – so siehst du mehr von den Jungtieren.",
+          "en": "Staying quiet pays off — you’ll see more of the babies.",
+          "it": "Restare in silenzio conviene: vedrai di più i cuccioli.",
+          "fr": "Rester discret en vaut la peine : vous verrez davantage les bébés."
+        }
+      },
+      "new-enclosure": {
+        "image": "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1600&q=80",
+        "title": {
+          "de": "Neues Gehege eröffnet",
+          "en": "New enclosure opened",
+          "it": "Nuovo recinto inaugurato",
+          "fr": "Nouvel enclos ouvert"
+        },
+        "subtitle": {
+          "de": "Mehr Raum, mehr Rückzug, bessere Sicht.",
+          "en": "More space, more retreat, better views.",
+          "it": "Più spazio, più privacy, migliore visibilità.",
+          "fr": "Plus d’espace, plus de retrait, meilleure visibilité."
+        },
+        "body": {
+          "de": [
+            "Das neue Gehege verbindet Beobachtungspunkte mit naturnaher Bepflanzung.",
+            "So können sich die Tiere zurückziehen, während Besucher dennoch Einblicke erhalten.",
+            "Entdecke die neuen Wege und Aussichtspunkte direkt vor Ort."
+          ],
+          "en": [
+            "The new enclosure combines observation spots with natural planting.",
+            "This allows animals to retreat while visitors still get great views.",
+            "Explore the new paths and viewpoints on site."
+          ],
+          "it": [
+            "Il nuovo recinto unisce punti di osservazione e vegetazione naturale.",
+            "Così gli animali possono ritirarsi, mentre i visitatori hanno comunque una buona visuale.",
+            "Scopri sul posto i nuovi percorsi e punti panoramici."
+          ],
+          "fr": [
+            "Le nouvel enclos associe des points d’observation à une végétation naturelle.",
+            "Les animaux peuvent ainsi se retirer, tout en offrant aux visiteurs de beaux aperçus.",
+            "Découvrez sur place les nouveaux chemins et points de vue."
+          ]
+        },
+        "highlights": {
+          "de": ["Neue Wege", "Naturnahe Pflanzen", "Mehr Rückzugsorte"],
+          "en": ["New paths", "Natural planting", "More retreat areas"],
+          "it": ["Nuovi percorsi", "Vegetazione naturale", "Più aree di ritiro"],
+          "fr": ["Nouveaux chemins", "Végétation naturelle", "Plus d’espaces de retrait"]
+        },
+        "tip": {
+          "de": "Plane eine kleine Runde: Der neue Bereich ist ideal für einen kurzen Abstecher.",
+          "en": "Plan a short loop — the new area is perfect for a quick detour.",
+          "it": "Fai un piccolo giro: la nuova area è perfetta per una breve deviazione.",
+          "fr": "Prévoyez une petite boucle : la nouvelle zone est idéale pour un court détour."
+        }
+      }
+    }
+  },
+  "navbar": {
+    "menuLabel": { "de": "Menü", "en": "Menu", "it": "Menu", "fr": "Menu" },
+    "openMenuAria": {
+      "de": "Menü öffnen",
+      "en": "Open menu",
+      "it": "Apri menu",
+      "fr": "Ouvrir le menu"
+    },
+    "home": { "de": "Home", "en": "Home", "it": "Home", "fr": "Accueil" },
+    "signIn": { "de": "Anmelden", "en": "Sign In", "it": "Accedi", "fr": "Se connecter" },
+    "signUp": { "de": "Registrieren", "en": "Sign Up", "it": "Registrati", "fr": "S'inscrire" },
+    "map": { "de": "Karte", "en": "Map", "it": "Mappa", "fr": "Carte" },
+    "articles": { "de": "Artikel", "en": "Articles", "it": "Articoli", "fr": "Articles" },
+    "chatbot": { "de": "Chatbot", "en": "Chatbot", "it": "Chatbot", "fr": "Chatbot" },
+    "purchaseTickets": { "de": "Tickets kaufen", "en": "Purchase Tickets", "it": "Acquista biglietti", "fr": "Acheter des billets" },
+    "orders": { "de": "Bestellungen", "en": "Orders", "it": "Ordini", "fr": "Commandes" },
+    "language": { "de": "Sprache", "en": "Language", "it": "Lingua", "fr": "Langue" },
+    "logout": { "de": "Abmelden", "en": "Log out", "it": "Esci", "fr": "Se déconnecter" },
+    "brand": { "de": "ZOO FJRC", "en": "ZOO FJRC", "it": "ZOO FJRC", "fr": "ZOO FJRC" },
+    "langNames": {
+      "de": { "de": "Deutsch", "en": "German", "it": "Tedesco", "fr": "Allemand" },
+      "en": { "de": "Englisch", "en": "English", "it": "Inglese", "fr": "Anglais" },
+      "fr": { "de": "Französisch", "en": "French", "it": "Francese", "fr": "Français" },
+      "it": { "de": "Italienisch", "en": "Italian", "it": "Italiano", "fr": "Italien" }
+    }
+  }
+}
+

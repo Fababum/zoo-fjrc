@@ -1,6 +1,6 @@
-﻿import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CreditCard, Lock, Trash2, Edit2, X } from "lucide-react";
+import { CreditCard, Check, Lock, Trash2, Edit2, X } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
 import { createOrder } from "@/api/orders";
 import type { Order } from "@/api/orders";
@@ -12,11 +12,8 @@ import {
 } from "@/api/paymentMethods";
 import type { PaymentMethod } from "@/api/paymentMethods";
 import { ToastViewport, useToast } from "@/components/ui/toast";
-import { TranslationsContext } from "../TranslationsContext";
 
-type TicketId = "adult" | "youth" | "child";
-type RawCartItem = { id?: TicketId | string; title?: string; price: number; qty: number };
-type CartItem = { id: TicketId; price: number; qty: number };
+type CartItem = { title: string; price: number; qty: number };
 type SavedCard = PaymentMethod;
 
 type CardErrors = {
@@ -27,75 +24,8 @@ type CardErrors = {
 
 function PurchaseTicketsCardInfo() {
   const location = useLocation();
-  const context = useContext(TranslationsContext);
-  if (!context) return null;
-
-  const { translations, lang } = context;
-  const t = translations.purchaseTicketsCardInfo;
-  const langKey = lang as keyof typeof t.title;
-
-  const rawCart: RawCartItem[] = Array.isArray((location.state as any)?.cart)
-    ? ((location.state as any).cart as RawCartItem[])
-    : [];
-  const rawTotal: number = (location.state && (location.state as any).total) || 0;
-  const ticketTranslations = translations.purchaseTickets.tickets;
-
-  const ticketTitleLookup = useMemo(() => {
-    const lookup: Record<string, TicketId> = {};
-    (Object.keys(ticketTranslations) as TicketId[]).forEach((id) => {
-      (["de", "en", "fr", "it"] as const).forEach((key) => {
-        lookup[ticketTranslations[id].title[key].toLowerCase()] = id;
-      });
-    });
-    return lookup;
-  }, [ticketTranslations]);
-
-  const cart: CartItem[] = useMemo(
-    () =>
-      rawCart.flatMap((item) => {
-        const id =
-          typeof item?.id === "string"
-            ? (item.id as TicketId)
-            : typeof item?.title === "string"
-            ? ticketTitleLookup[item.title.toLowerCase()]
-            : undefined;
-        if (!id || !(id in ticketTranslations)) return [];
-        const qty = typeof item?.qty === "number" ? item.qty : 1;
-        const price = typeof item?.price === "number" ? item.price : 0;
-        return [{ id, qty, price }];
-      }),
-    [rawCart, ticketTitleLookup, ticketTranslations]
-  );
-
-  const derivedTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const total = typeof rawTotal === "number" && rawTotal > 0 ? rawTotal : derivedTotal;
-  const orderItems = useMemo(
-    () =>
-      cart.map((item) => ({
-        title: ticketTranslations[item.id].title[langKey],
-        price: item.price,
-        qty: item.qty,
-      })),
-    [cart, langKey, ticketTranslations]
-  );
-
-  const localeMap: Record<typeof langKey, string> = {
-    de: "de-CH",
-    en: "en-US",
-    it: "it-IT",
-    fr: "fr-FR",
-  };
-  const currency = translations.common.currency[langKey] ?? "CHF";
-  const formatter = useMemo(
-    () =>
-      new Intl.NumberFormat(localeMap[langKey], {
-        style: "currency",
-        currency,
-      }),
-    [currency, langKey]
-  );
-  const formatMoney = (value: number) => formatter.format(value);
-  const fields = t.fields;
+  const cart: CartItem[] = (location.state && (location.state as any).cart) || [];
+  const total: number = (location.state && (location.state as any).total) || 0;
 
   const [savedCards, setSavedCards] = useState<SavedCard[]>([]);
   const [selectedCardId, setSelectedCardId] = useState("new");
@@ -190,14 +120,14 @@ function PurchaseTicketsCardInfo() {
     const fallbackOrder: Order = {
       id: Date.now(),
       userId: auth.user?.id ?? 0,
-      items: orderItems,
+      items: cart,
       total,
       createdAt: new Date().toISOString(),
     };
 
     try {
       const created = await createOrder(
-        { items: orderItems, total },
+        { items: cart, total },
         auth.token
       );
       const raw = localStorage.getItem(ordersStorageKey);
@@ -229,7 +159,7 @@ function PurchaseTicketsCardInfo() {
   };
 
   const handleOrderSuccess = () => {
-    pushToast(t.toastOrderSuccess[langKey], "success");
+    pushToast("Tickets erfolgreich gekauft.", "success");
     window.setTimeout(() => {
       navigate(resolveOrdersPath());
     }, 600);
@@ -260,25 +190,25 @@ function PurchaseTicketsCardInfo() {
 
     if (requireAll || cleanedNumber) {
       if (!cleanedNumber) {
-        errors.cardNumber = t.validation.cardNumberRequired[langKey];
+        errors.cardNumber = "Bitte geben Sie eine Kartennummer ein";
       } else if (!/^\d{13,19}$/.test(cleanedNumber) || !isLuhnValid(cleanedNumber)) {
-        errors.cardNumber = t.validation.cardNumberInvalid[langKey];
+        errors.cardNumber = "Bitte geben Sie eine gueltige Kartennummer ein";
       }
     }
 
     if (requireAll || values.expiry) {
       if (!values.expiry) {
-        errors.expiry = t.validation.expiryRequired[langKey];
+        errors.expiry = "Bitte geben Sie ein Ablaufdatum ein";
       } else {
         const [expYear, expMonth] = values.expiry.split("-").map((value) => Number(value));
         if (!expYear || !expMonth || expMonth < 1 || expMonth > 12) {
-          errors.expiry = t.validation.expiryInvalid[langKey];
+          errors.expiry = "Bitte geben Sie ein gueltiges Ablaufdatum ein";
         } else {
           const now = new Date();
           const currentYear = now.getFullYear();
           const currentMonth = now.getMonth() + 1;
           if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
-            errors.expiry = t.validation.cardExpired[langKey];
+            errors.expiry = "Diese Karte ist abgelaufen";
           }
         }
       }
@@ -286,9 +216,9 @@ function PurchaseTicketsCardInfo() {
 
     if (requireAll || values.cvv) {
       if (!values.cvv) {
-        errors.cvv = t.validation.cvvRequired[langKey];
+        errors.cvv = "Bitte geben Sie einen CVV/CVC ein";
       } else if (!/^\d{3,4}$/.test(values.cvv)) {
-        errors.cvv = t.validation.cvvInvalid[langKey];
+        errors.cvv = "Bitte geben Sie einen gueltigen CVV/CVC ein";
       }
     }
 
@@ -328,7 +258,7 @@ function PurchaseTicketsCardInfo() {
 
   const handlePay = () => {
     if (!firstName || !lastName || !street || !houseNumber || !postalCode || !city) {
-      return alert(t.validation.requiredFields[langKey]);
+      return alert("Bitte f?llen Sie alle Pflichtfelder aus");
     }
 
     if (selectedCardId === "new") {
@@ -384,12 +314,12 @@ function PurchaseTicketsCardInfo() {
         return;
       }
       console.error(err);
-      alert(t.errorSaveCard[langKey]);
+      alert("Speichern der Karte fehlgeschlagen");
     }
   };
 
   const handleDeleteCard = async (id: number) => {
-    if (confirm(t.confirmDeleteCard[langKey])) {
+    if (confirm("Möchten Sie diese Karte wirklich löschen?")) {
       if (!auth.token) return;
       try {
         await deletePaymentMethod(id, auth.token);
@@ -404,7 +334,7 @@ function PurchaseTicketsCardInfo() {
           return;
         }
         console.error(err);
-        alert(t.errorDeleteCard[langKey]);
+        alert("Löschen der Karte fehlgeschlagen");
       }
     }
   };
@@ -445,7 +375,7 @@ function PurchaseTicketsCardInfo() {
       setSavedCards(next);
       setShowEditModal(false);
       setEditingCard(null);
-      alert(t.successSaveChanges[langKey]);
+      alert("Änderungen gespeichert!");
 
       if (String(updated.id) === selectedCardId) {
         setFirstName(updated.firstName);
@@ -463,7 +393,7 @@ function PurchaseTicketsCardInfo() {
         return;
       }
       console.error(err);
-      alert(t.errorSaveChanges[langKey]);
+      alert("Speichern der Änderungen fehlgeschlagen");
     }
   };
 
@@ -474,12 +404,10 @@ function PurchaseTicketsCardInfo() {
           <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 sm:p-8">
             <div className="flex items-center gap-3 text-white">
               <Lock className="w-7 h-7" />
-              <h1 className="text-2xl sm:text-3xl font-bold">
-                {t.title[langKey]}
-              </h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">Sichere Zahlung</h1>
             </div>
             <p className="text-gray-300 mt-2 text-sm sm:text-base">
-              {t.subtitle[langKey]}
+              Ihre Daten sind durch SSL-Verschlüsselung geschützt
             </p>
           </div>
 
@@ -488,22 +416,22 @@ function PurchaseTicketsCardInfo() {
               <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-300">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                   <CreditCard className="w-5 h-5" />
-                  {t.orderSummary[langKey]}
+                  Bestellübersicht
                 </h3>
                 <div className="space-y-2">
                   {cart.map((item, i) => (
                     <div key={i} className="flex justify-between text-sm">
                       <span className="text-gray-700">
-                        {item.qty}x {ticketTranslations[item.id].title[langKey]}
+                        {item.qty}x {item.title}
                       </span>
                       <span className="font-medium text-gray-900">
-                        {formatMoney(item.price * item.qty)}
+                        CHF {(item.price * item.qty).toFixed(2)}
                       </span>
                     </div>
                   ))}
                   <div className="border-t border-gray-300 pt-3 mt-3 flex justify-between font-bold text-lg">
-                    <span>{t.totalLabel[langKey]}</span>
-                    <span className="text-gray-800">{formatMoney(total)}</span>
+                    <span>Total</span>
+                    <span className="text-gray-800">CHF {total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -511,20 +439,20 @@ function PurchaseTicketsCardInfo() {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {t.paymentMethodLabel[langKey]}
+                Zahlungsmethode
               </label>
               {showAuthNotice && (
                 <div className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                  <div className="font-semibold">{t.authNotice.title[langKey]}</div>
+                  <div className="font-semibold">Bitte anmelden</div>
                   <p className="mt-1">
-                    {t.authNotice.body[langKey]}
+                    Melden Sie sich an, um gespeicherte Zahlungsmethoden zu sehen und zu speichern.
                   </p>
                   <button
                     type="button"
                     onClick={() => navigate(resolveSignInPath())}
                     className="mt-3 inline-flex items-center rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 transition-all"
                   >
-                    {t.authNotice.cta[langKey]}
+                    Zum Login
                   </button>
                 </div>
               )}
@@ -533,10 +461,10 @@ function PurchaseTicketsCardInfo() {
                 value={selectedCardId} 
                 onChange={e=>setSelectedCardId(e.target.value)}
               >
-                <option value="new">{t.newCardOption[langKey]}</option>
+                <option value="new">+ Neue Karte hinzufügen</option>
                 {savedCards.map(c=>(
                   <option key={c.id} value={c.id}>
-                    {c.cardType.toUpperCase()} â€¢â€¢â€¢â€¢ {c.last4} ({c.firstName} {c.lastName})
+                    {c.cardType.toUpperCase()} •••• {c.last4} ({c.firstName} {c.lastName})
                   </option>
                 ))}
               </select>
@@ -544,20 +472,15 @@ function PurchaseTicketsCardInfo() {
 
             {savedCards.length > 0 && selectedCardId !== "new" && (
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-gray-700">
-                  {t.savedCardsTitle[langKey]}
-                </h3>
+                <h3 className="text-sm font-semibold text-gray-700">Gespeicherte Karten</h3>
                 {savedCards.map(card => (
                   <div key={card.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <div className="flex-1">
                     <div className="font-medium text-gray-900">
-                      {card.cardType.toUpperCase()} â€¢â€¢â€¢â€¢ {card.last4}
+                      {card.cardType.toUpperCase()} •••• {card.last4}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {t.cardValidUntil[langKey].replace(
-                        "{date}",
-                        `${String(card.expMonth).padStart(2, "0")}/${card.expYear}`
-                      )}
+                      Gültig bis {String(card.expMonth).padStart(2, "0")}/{card.expYear}
                     </div>
                     <div className="text-sm text-gray-600">
                       {card.firstName} {card.lastName}
@@ -570,14 +493,14 @@ function PurchaseTicketsCardInfo() {
                       <button
                         onClick={() => handleEditCard(card)}
                         className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded-lg transition-all"
-                        title={t.editTitle[langKey]}
+                        title="Bearbeiten"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteCard(card.id)}
                         className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all"
-                        title={t.deleteTitle[langKey]}
+                        title="Löschen"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -591,32 +514,32 @@ function PurchaseTicketsCardInfo() {
               <div className="bg-gray-50 rounded-xl p-6 space-y-4 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-gray-700" />
-                  {t.newCardTitle[langKey]}
+                  Neue Karte
                 </h3>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.cardTypeLabel[langKey]}
+                      Kartentyp
                     </label>
                     <select 
                       className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
                       value={cardType} 
                       onChange={e=>setCardType(e.target.value)}
                     >
-                      <option value="visa">{t.cardTypeOptions.visa[langKey]}</option>
-                      <option value="mastercard">{t.cardTypeOptions.mastercard[langKey]}</option>
-                      <option value="amex">{t.cardTypeOptions.amex[langKey]}</option>
+                      <option value="visa">💳 Visa</option>
+                      <option value="mastercard">💳 Mastercard</option>
+                      <option value="amex">💳 American Express</option>
                     </select>
                   </div>
 
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.cardNumberLabel[langKey]}
+                      Kartennummer *
                     </label>
                     <input 
                       className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                      placeholder={t.cardNumberPlaceholder[langKey]} 
+                      placeholder="1234 5678 9012 3456" 
                       value={cardNumber} 
                       onChange={e=>handleCardNumberChange(e.target.value)}
                       maxLength={23}
@@ -630,7 +553,7 @@ function PurchaseTicketsCardInfo() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.expiryLabel[langKey]}
+                      Ablaufdatum *
                     </label>
                     <input 
                       type="month"
@@ -646,11 +569,11 @@ function PurchaseTicketsCardInfo() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.cvvLabel[langKey]}
+                      CVV/CVC *
                     </label>
                     <input 
                       className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                      placeholder={t.cvvPlaceholder[langKey]} 
+                      placeholder="123" 
                       value={cvv} 
                       onChange={e=>handleCvvChange(e.target.value)}
                       maxLength={4}
@@ -668,17 +591,17 @@ function PurchaseTicketsCardInfo() {
 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                {t.billingAddressTitle[langKey]}
+                Rechnungsadresse
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.firstName.label[langKey]}
+                    Vorname *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.firstName.placeholder[langKey]} 
+                    placeholder="Max" 
                     value={firstName} 
                     onChange={e=>setFirstName(e.target.value)}
                   />
@@ -686,11 +609,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.lastName.label[langKey]}
+                    Nachname *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.lastName.placeholder[langKey]} 
+                    placeholder="Mustermann" 
                     value={lastName} 
                     onChange={e=>setLastName(e.target.value)}
                   />
@@ -698,11 +621,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.street.label[langKey]}
+                    Strasse *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.street.placeholder[langKey]} 
+                    placeholder="Bahnhofstrasse" 
                     value={street} 
                     onChange={e=>setStreet(e.target.value)}
                   />
@@ -710,11 +633,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.houseNumber.label[langKey]}
+                    Hausnummer *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.houseNumber.placeholder[langKey]} 
+                    placeholder="123" 
                     value={houseNumber} 
                     onChange={e=>setHouseNumber(e.target.value)}
                   />
@@ -722,11 +645,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.addressExtra.label[langKey]}
+                    Adresszusatz
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.addressExtra.placeholder[langKey]} 
+                    placeholder="Wohnung, Stockwerk, etc." 
                     value={addressExtra} 
                     onChange={e=>setAddressExtra(e.target.value)}
                   />
@@ -734,11 +657,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.postalCode.label[langKey]}
+                    PLZ *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.postalCode.placeholder[langKey]} 
+                    placeholder="8000" 
                     value={postalCode} 
                     onChange={e=>setPostalCode(e.target.value)}
                   />
@@ -746,11 +669,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.city.label[langKey]}
+                    Ort *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.city.placeholder[langKey]} 
+                    placeholder="Zürich" 
                     value={city} 
                     onChange={e=>setCity(e.target.value)}
                   />
@@ -758,11 +681,11 @@ function PurchaseTicketsCardInfo() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.phone.label[langKey]}
+                    Telefonnummer
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
-                    placeholder={fields.phone.placeholder[langKey]} 
+                    placeholder="+41 79 123 45 67" 
                     value={phone} 
                     onChange={e=>setPhone(e.target.value)}
                   />
@@ -776,10 +699,10 @@ function PurchaseTicketsCardInfo() {
                 className="w-full h-14 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3"
               >
                 <Lock className="w-5 h-5" />
-                {t.payNow[langKey].replace("{amount}", formatMoney(total))}
+                Jetzt bezahlen CHF {total.toFixed(2)}
               </button>
               <p className="text-center text-sm text-gray-500 mt-4">
-                 {t.sslNote[langKey]}
+                 Sichere Zahlung mit SSL-Verschlüsselung
               </p>
             </div>
           </div>
@@ -791,12 +714,10 @@ function PurchaseTicketsCardInfo() {
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <CreditCard className="w-6 h-6 text-gray-700" />
-              <h3 className="text-xl font-bold text-gray-900">
-                {t.saveCardPrompt.title[langKey]}
-              </h3>
+              <h3 className="text-xl font-bold text-gray-900">Karte speichern?</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              {t.saveCardPrompt.body[langKey]}
+              Möchten Sie diese Karte und die Zahlungsinformationen für zukünftige Käufe speichern?
             </p>
             <div className="flex gap-3">
               <button
@@ -807,13 +728,13 @@ function PurchaseTicketsCardInfo() {
                 }}
                 className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-all"
               >
-                {t.saveCardPrompt.decline[langKey]}
+                Nein, danke
               </button>
               <button
                 onClick={handleSaveCard}
                 className="flex-1 px-4 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white font-semibold rounded-lg transition-all"
               >
-                {t.saveCardPrompt.accept[langKey]}
+                Ja, speichern
               </button>
             </div>
           </div>
@@ -826,9 +747,7 @@ function PurchaseTicketsCardInfo() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <Edit2 className="w-6 h-6 text-gray-700" />
-                <h3 className="text-xl font-bold text-gray-900">
-                  {t.editModalTitle[langKey]}
-                </h3>
+                <h3 className="text-xl font-bold text-gray-900">Zahlungsinformationen bearbeiten</h3>
               </div>
               <button
                 onClick={() => {
@@ -845,7 +764,7 @@ function PurchaseTicketsCardInfo() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.firstName.label[langKey]}
+                    Vorname *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -856,7 +775,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.lastName.label[langKey]}
+                    Nachname *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -867,7 +786,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.street.label[langKey]}
+                    Strasse *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -878,7 +797,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.houseNumber.label[langKey]}
+                    Hausnummer *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -889,7 +808,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.addressExtra.label[langKey]}
+                    Adresszusatz
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -900,7 +819,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.postalCode.label[langKey]}
+                    PLZ *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -911,7 +830,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.city.label[langKey]}
+                    Ort *
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -922,7 +841,7 @@ function PurchaseTicketsCardInfo() {
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {fields.phone.label[langKey]}
+                    Telefonnummer
                   </label>
                   <input 
                     className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-lg focus:border-gray-600 focus:ring-2 focus:ring-gray-200 transition-all"
@@ -941,13 +860,13 @@ function PurchaseTicketsCardInfo() {
                 }}
                 className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-all"
               >
-                {t.cancel[langKey]}
+                Abbrechen
               </button>
               <button
                 onClick={handleSaveEdit}
                 className="flex-1 px-4 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white font-semibold rounded-lg transition-all"
               >
-                {t.save[langKey]}
+                Speichern
               </button>
             </div>
           </div>
@@ -960,4 +879,3 @@ function PurchaseTicketsCardInfo() {
 }
 
 export default PurchaseTicketsCardInfo;
-

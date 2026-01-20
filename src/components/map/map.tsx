@@ -1,27 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import mapImg from "../../assets/zoo-map.jpg";
-import { TranslationsContext } from "../TranslationsContext";
 
 function MapPage() {
-  const context = useContext(TranslationsContext);
-  if (!context) return null;
-
-  const { translations, lang } = context;
-  const t = translations.mapPage;
-  const langKey = lang as keyof typeof t.title;
-
   return (
     <div style={pageStyle}>
       <div style={contentStyle}>
         <div style={titleWrapStyle}>
-          <div style={kickerStyle}>{translations.common.brand[langKey]}</div>
-          <h1 style={titleStyle}>{t.title[langKey]}</h1>
+          <div style={kickerStyle}>ZOO FJRC</div>
+          <h1 style={titleStyle}>Zoo-Plan</h1>
           <p style={subtitleStyle}>
-            {t.subtitle[langKey]}
+            Orientierung auf einen Blick. Entdecke Bereiche, Wege und Highlights.
           </p>
         </div>
         <div style={mapWrapStyle}>
-        <img src={mapImg} alt={t.imageAlt[langKey]} style={mapStyle} />
+        <img src={mapImg} alt="Zoo Map" style={mapStyle} />
         </div>
       </div>
     </div>

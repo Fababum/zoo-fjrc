@@ -1,16 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { TranslationsContext } from "../TranslationsContext";
 
 
 export default function FloatingTicket() {
-  const context = useContext(TranslationsContext);
-  if (!context) return null;
-
-  const { translations, lang } = context;
-  const t = translations.floatingTicket;
-  const langKey = lang as keyof typeof t.label;
-
   const container: React.CSSProperties = {
     position: "fixed",
     bottom: "18px",
@@ -41,23 +33,11 @@ export default function FloatingTicket() {
   };
 
 
-  const resolvePath = (path: string) => {
-    const segment = window.location.pathname.split("/")[1];
-    const isLang = ["de", "en", "fr", "it"].includes(segment);
-    if (!isLang) return path;
-    return `/${segment}${path.startsWith("/") ? path : `/${path}`}`;
-  };
-
   return (
-    <Link
-      to={resolvePath("/purchaseTickets")}
-      style={container}
-      aria-label={t.ariaLabel[langKey]}
-      className="floating-ticket"
-    >
+    <Link to="/purchaseTickets" style={container} aria-label="Buy tickets" className="floating-ticket">
       <div style={box}>
-        <img src="/ticket.png" alt={t.imageAlt[langKey]} style={imgStyle} />
-        <span>{t.label[langKey]}</span>
+        <img src="/ticket.png" alt="Ticket" style={imgStyle} />
+        <span>Buy Tickets</span>
       </div>
     </Link>
   );
