@@ -170,7 +170,7 @@ function SignIn() {
             </Button>
 
             <p className="text-sm text-muted-foreground text-center">
-              Noch keinen Account?{" "}
+              {t.noAccountYet[langKey]}{" "}
               <Button
                 type="button"
                 variant="link"

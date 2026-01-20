@@ -198,7 +198,7 @@ function SignUp() {
             </Button>
 
             <p className="text-sm text-muted-foreground text-center">
-              Hast du schon ein Account?{" "}
+              {context.translations.signUp.alreadyHaveAccount[langKey]}{" "}
               <Button
                 type="button"
                 variant="link"

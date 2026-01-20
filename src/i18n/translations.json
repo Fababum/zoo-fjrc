@@ -71,6 +71,12 @@
       "en": "m@example.com",
       "it": "m@esempio.com",
       "fr": "m@exemple.com"
+    },
+    "alreadyHaveAccount": {
+      "de": "Hast du schon ein Account?",
+      "en": "Already have an account?",
+      "it": "Hai già un account?",
+      "fr": "Vous avez déjà un compte ?"
     }
   },
   "signIn": {
@@ -121,6 +127,12 @@
       "en": "Login with Google",
       "it": "Accedi con Google",
       "fr": "Se connecter avec Google"
+    },
+    "noAccountYet": {
+      "de": "Noch keinen Account?",
+      "en": "Don't have an account yet?",
+      "it": "Non hai ancora un account?",
+      "fr": "Pas encore de compte ?"
     }
   },
   "signUpConfirmation": {
