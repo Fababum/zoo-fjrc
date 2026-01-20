@@ -3,6 +3,10 @@
 export interface Artikel {
   id: number;
   markdownText: string;
+  markdownTextDe?: string;
+  markdownTextEn?: string;
+  markdownTextFr?: string;
+  markdownTextIt?: string;
   userId: number;
   isActive: boolean;
   createdAt: string;
@@ -21,6 +25,10 @@ export interface CreateArtikelDto {
 
 export interface UpdateArtikelDto {
   markdownText?: string;
+  markdownTextDe?: string;
+  markdownTextEn?: string;
+  markdownTextFr?: string;
+  markdownTextIt?: string;
   isActive?: boolean;
 }
 

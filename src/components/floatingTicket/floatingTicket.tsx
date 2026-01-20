@@ -1,8 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useParams } from "react-router-dom";
+import { TranslationsContext } from "../TranslationsContext";
+
+const SUPPORTED_LANGS = ["de", "en", "fr", "it"] as const;
+type SupportedLang = (typeof SUPPORTED_LANGS)[number];
+
+const resolveLang = (contextLang?: string, routeLang?: string): SupportedLang => {
+  if ((SUPPORTED_LANGS as readonly string[]).includes(contextLang ?? "")) {
+    return contextLang as SupportedLang;
+  }
+  if ((SUPPORTED_LANGS as readonly string[]).includes(routeLang ?? "")) {
+    return routeLang as SupportedLang;
+  }
+  return "de";
+};
 
 
 export default function FloatingTicket() {
+  const context = useContext(TranslationsContext);
+  const { lang: routeLang } = useParams<{ lang?: string }>();
+  const activeLang = resolveLang(context?.lang, routeLang);
+  const t = {
+    label: {
+      de: "Tickets kaufen",
+      en: "Buy tickets",
+      fr: "Acheter des billets",
+      it: "Acquista biglietti",
+    },
+    aria: {
+      de: "Tickets kaufen",
+      en: "Buy tickets",
+      fr: "Acheter des billets",
+      it: "Acquista biglietti",
+    },
+  } as const;
+
   const container: React.CSSProperties = {
     position: "fixed",
     bottom: "18px",
@@ -34,10 +66,15 @@ export default function FloatingTicket() {
 
 
   return (
-    <Link to="/purchaseTickets" style={container} aria-label="Buy tickets" className="floating-ticket">
+    <Link
+      to={`/${activeLang}/purchaseTickets`}
+      style={container}
+      aria-label={t.aria[activeLang]}
+      className="floating-ticket"
+    >
       <div style={box}>
         <img src="/ticket.png" alt="Ticket" style={imgStyle} />
-        <span>Buy Tickets</span>
+        <span>{t.label[activeLang]}</span>
       </div>
     </Link>
   );
